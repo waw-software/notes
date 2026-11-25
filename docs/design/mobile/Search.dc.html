@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Search</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; padding: 56px 0 20px; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 0 20px 14px">
+<div style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D9D6D0; border-radius: 12px">
+<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="2" style="color: #5C5C5C"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%)">Search notes</label>
+<input id="q" type="search" value="quotes" style="flex-grow: 1; min-width: 0; height: 44px; border: none; background: transparent; font-family: inherit; font-size: 16px; color: #171717">
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{c.pressed}}" style="height: 40px; padding: 0 14px; border: 1px solid {{c.border}}; border-radius: 999px; background: {{c.bg}}; color: {{c.ink}}; font-family: inherit; font-size: 14px; font-weight: 500">{{c.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 20px; overflow: hidden">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">3 NOTES</span>
+<sc-for list="{{results}}" as="r" hint-placeholder-count="3">
+<a href="Note.dc.html" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 0; border-bottom: 1px solid #EEECE8; color: #171717; text-decoration: none">
+<span style="font-size: 16px; font-weight: 500; line-height: 22px">{{r.title}}</span>
+<span style="font-size: 14px; line-height: 21px; color: #3D3D3D">{{r.before}}<span style="padding: 0 2px; border-radius: 3px; background: #FBF3E2; color: #171717; font-weight: 600">quotes</span>{{r.after}}</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5C5C5C"><span aria-hidden="true">{{r.emoji}}</span><span>{{r.meta}}</span></span>
+</a>
+</sc-for>
+<p style="margin: 16px 0 0; font-size: 13px; line-height: 19px; color: #5C5C5C">Search reads the notes saved on this phone, so it also works offline.</p>
+</div>
+
+<nav aria-label="Main" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px 12px 0; border-top: 1px solid #EEECE8; background: #FFFFFF">
+<sc-for list="{{tabs}}" as="tab" hint-placeholder-count="3">
+<a href="{{tab.href}}" style="height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{tab.ink}}; font-size: 11px; font-weight: {{tab.weight}}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" stroke-width="1.9"><path d="{{tab.d}}"></path></svg><span>{{tab.label}}</span></a>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+function tabs(active) {
+return [['Notes', 'Main.dc.html', 'M7 3h8l4 4v14H7z M15 3v4h4 M10 12h6 M10 16h6'], ['Notebooks', 'Notebooks.dc.html', 'M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11 M10 8h5'], ['Search', 'Search.dc.html', 'M11 4a7 7 0 100 14 7 7 0 000-14z M20 20l-4-4']].map(function (t) {
+var on = t[0] === active;
+return { label: t[0], href: t[1], d: t[2], ink: on ? '#B01A31' : '#5C5C5C', weight: on ? 600 : 500 };
+});
+}
+
+return {
+tabs: tabs('Search'),
+chips: [['Everywhere', true], ['🏠 Home', false], ['#renovation', false]].map(function (c) { return { label: c[0], pressed: c[1] ? 'true' : 'false', bg: c[1] ? '#171717' : '#FFFFFF', ink: c[1] ? '#FFFFFF' : '#171717', border: c[1] ? '#171717' : '#D9D6D0' }; }),
+results: [
+{ title: 'Kitchen renovation', before: 'To do: get three ', after: ' before choosing the contractor', emoji: '🏠', meta: 'Home · today' },
+{ title: 'Contractor calls', before: 'Both ', after: ' include removing the old tiles', emoji: '🏠', meta: 'Home · Mon' },
+{ title: 'Offsite planning', before: 'Collect ', after: ' for the venue by Friday', emoji: '💼', meta: 'Work · 12 Nov' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

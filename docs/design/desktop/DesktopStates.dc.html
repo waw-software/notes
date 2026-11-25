@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Offline, update and empty editor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; display: flex; flex-wrap: wrap; min-height: 900px; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<aside style="flex: 1 0 248px; box-sizing: border-box; padding: 20px 14px; display: flex; flex-direction: column; gap: 16px; background: #F6F5F2">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 6px">
+<div aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9px; background: #D4213D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke-width="2.4"><path d="M7 4h7l4 4v12H7z M9.5 12h5 M9.5 16h5"></path></svg></div>
+<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px">WAW Notes</span>
+</div>
+<a href="DesktopEditor.dc.html" style="height: 44px; border-radius: 12px; background: #D4213D; color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">New note</a>
+<a href="DesktopSwitcher.dc.html" style="display: flex; align-items: center; gap: 10px; height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D9D6D0; border-radius: 12px; background: #FFFFFF; color: #5C5C5C; font-size: 14px; text-decoration: none"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="flex-grow: 1; white-space: nowrap">Search notes</span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: nowrap; padding: 2px 6px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">Ctrl K</span></a>
+<nav aria-label="Views" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="2">
+<a href="Desktop.dc.html" style="display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{n.bg}}; color: #171717; font-size: 15px; font-weight: {{n.weight}}; text-decoration: none"><span>{{n.label}}</span><span style="font-size: 13px; color: #5C5C5C">{{n.count}}</span></a>
+</sc-for>
+</nav>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 10px 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">NOTEBOOKS</span>
+<sc-for list="{{books}}" as="b" hint-placeholder-count="6">
+<a href="Desktop.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{b.bg}}; color: #171717; font-size: 15px; font-weight: {{b.weight}}; text-decoration: none"><span aria-hidden="true" style="width: 22px; display: flex; justify-content: center; font-size: 16px; color: #5C5C5C"><span style="display: {{b.emojiShow}}">{{b.emoji}}</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" stroke-width="1.9" style="display: {{b.iconShow}}"><path d="M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11"></path></svg></span><span style="flex-grow: 1">{{b.name}}</span><span style="font-size: 13px; font-weight: 400; color: #5C5C5C">{{b.count}}</span></a>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="padding: 0 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">TAGS</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 0 6px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+<a href="DesktopSwitcher.dc.html" style="padding: 7px 10px; border-radius: 8px; background: #FFFFFF; color: #3D3D3D; font-size: 13px; font-weight: 500; text-decoration: none">{{t.name}}</a>
+</sc-for>
+</div>
+</div>
+<a href="DesktopSettings.dc.html" style="margin-top: auto; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 10px; border-radius: 10px; color: #3D3D3D; font-size: 13px; font-weight: 500; text-decoration: none"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #8A5A00"></span>home-server · offline</a>
+</aside>
+
+<section aria-label="Notes in Home" style="flex: 2 0 320px; max-width: 380px; box-sizing: border-box; padding: 20px 14px; border-right: 1px solid #EEECE8; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 0 10px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.2px"><span aria-hidden="true">🏠</span> Home</h2>
+<button type="button" style="display: flex; align-items: center; gap: 4px; height: 44px; padding: 0; border: none; background: transparent; color: #5C5C5C; font-family: inherit; font-size: 13px; font-weight: 500">Last edited<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" stroke-width="2.2"><path d="M6 9l6 6 6-6"></path></svg></button>
+</div>
+<div role="status" style="display: flex; align-items: center; gap: 8px; margin: 0 0 6px; padding: 4px 4px 4px 12px; border-radius: 12px; background: #FBF3E2; color: #7A4F00"><span style="flex-grow: 1; font-size: 13px; line-height: 19px; font-weight: 500">Working offline. 2 notes will sync when the server is back.</span><button type="button" style="height: 44px; padding: 0 8px; border: none; background: transparent; color: #7A4F00; font-family: inherit; font-size: 13px; font-weight: 600">Retry</button></div>
+<sc-for list="{{notes}}" as="n" hint-placeholder-count="6">
+<a href="Desktop.dc.html" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 10px; border-radius: 12px; background: {{n.bg}}; color: #171717; text-decoration: none">
+<span style="font-size: 15px; font-weight: 600">{{n.title}}</span>
+<span style="font-size: 13px; line-height: 19px; color: #3D3D3D; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">{{n.snippet}}</span>
+<span style="font-size: 12px; color: #5C5C5C">{{n.meta}}<span style="color: #8A5A00; font-weight: 500">{{n.sync}}</span></span>
+</a>
+</sc-for>
+</section>
+
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 20px 28px 40px; display: flex; flex-direction: column; gap: 12px">
+<div role="status" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 10px 8px 10px 16px; border-radius: 12px; background: #F6F5F2">
+<span style="flex: 1 1 320px; font-size: 14px; line-height: 21px"><span style="font-weight: 600">Your server needs an update.</span> It runs API v1, this app supports v2. Newer features stay off until you update.</span>
+<a href="DesktopSettings.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: 14px; font-weight: 600; text-decoration: none">How to update</a>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 0; text-align: center">
+<span aria-hidden="true" style="width: 56px; height: 56px; border-radius: 18px; background: #F6F5F2; color: #5C5C5C; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="26" height="26" stroke-width="1.8"><path d="M7 3h8l4 4v14H7z M15 3v4h4 M10 12h6 M10 16h6"></path></svg></span>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.3px">Pick a note, or start a new one</h2>
+<p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 23px; color: #3D3D3D">Everything stays readable and editable offline. Changes sync when the server is back.</p>
+<a href="DesktopEditor.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; margin-top: 4px; background: #D4213D; color: #FFFFFF">New note</a>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin-top: 14px; font-size: 13px; color: #3D3D3D"><span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 400; padding: 3px 7px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">/</span> insert a block</span><span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 400; padding: 3px 7px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">[[</span> link a note</span><span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 400; padding: 3px 7px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">Ctrl K</span> jump to a note</span></div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+function side(active) {
+var on = function (k) { return k === active; };
+return {
+nav: [['All notes', '42'], ['Pinned', '3']].map(function (n) { return { label: n[0], count: n[1], bg: on(n[0]) ? '#FFFFFF' : 'transparent', weight: on(n[0]) ? 600 : 500 }; }),
+books: [['🏠', 'Home', '12'], ['💼', 'Work', '14'], ['📚', 'Reading', '6'], ['✈️', 'Travel', '4'], ['💡', 'Ideas', '4'], ["", 'Recipes', '2']].map(function (b) { return { emoji: b[0], name: b[1], count: b[2], emojiShow: b[0] ? 'inline' : 'none', iconShow: b[0] ? 'none' : 'block', bg: on(b[1]) ? '#FFFFFF' : 'transparent', weight: on(b[1]) ? 600 : 500 }; }),
+tags: ['#renovation', '#meeting', '#book', '#idea', '#recipe'].map(function (t) { return { name: t }; })
+};
+}
+
+var notes = [
+['Kitchen renovation', 'Goal: a working kitchen before March. Money and contractor choices live in Budget 2027.', 'Today, 14:20', ' · not synced yet'],
+['Shopping for Saturday', 'Milk, oak oil, sandpaper 120, masking tape, wood filler.', 'Today, 13:05', ' · not synced yet'],
+['Budget 2027', 'Monthly plan, renovation fund, big purchases.', 'Yesterday · pinned', ""],
+['Contractor calls', 'Both quotes include removing the old tiles. The second one is cheaper but starts in February.', 'Mon · #renovation', ""],
+['Home insurance', 'Policy renews in January. Compare two offers before the 15th.', '14 Nov', ""]
+].map(function (n) { return { title: n[0], snippet: n[1], meta: n[2], sync: n[3], bg: 'transparent' }; });
+return Object.assign(side('Home'), { notes: notes });
+}
+}
+</script>
+</body>
+</html>

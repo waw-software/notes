@@ -4,7 +4,12 @@ Instructions for AI coding agents in this repository; people start at `README.md
 comes from the project template: change it in the template, except the project block below.
 
 <!-- project:start -->
-The project is **WAW Notes** (`waw-software/notes`). Self-hosted notes app, no telemtry, full-secured.
+The project is **WAW Notes** (`waw-software/notes`). Self-hosted notes app, no telemetry, full-secured.
+It is a server deployed with Docker, plus iOS, web and Electron clients; bots connect through MCP.
+Stack: [ADR 0001](docs/decisions/0001-client-and-server-stack.md); editor component: open, slice-0 spike.
+Stage: growing.
+Read first: `docs/SPEC.md`, `docs/DESIGN.md`, `docs/requirements.md`, `docs/working-rules.md`, `docs/decisions/README.md`.
+Commands: none yet: the scaffold pull request adds them.
 <!-- project:end -->
 
 ## Commands

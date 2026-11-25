@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Working offline</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; padding: 56px 0 20px; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 0 20px 12px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 30px; letter-spacing: -0.4px">Notes</h1>
+<span style="font-size: 14px; color: #5C5C5C">Wed 25 Nov · 42 notes in 6 notebooks</span>
+</div>
+<div role="status" style="display: flex; align-items: center; gap: 8px; margin: 0 20px 12px; padding: 6px 6px 6px 14px; border-radius: 12px; background: #FBF3E2; color: #7A4F00">
+<span style="flex-grow: 1; font-size: 14px; line-height: 20px; font-weight: 500">Working offline. 3 notes will sync when the server is back.</span>
+<button type="button" style="height: 44px; padding: 0 10px; border: none; background: transparent; color: #7A4F00; font-family: inherit; font-size: 14px; font-weight: 600">Retry</button>
+</div>
+<div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 20px; overflow: hidden">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">RECENT</span>
+<sc-for list="{{recent}}" as="n" hint-placeholder-count="5">
+<a href="Note.dc.html" style="display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-bottom: 1px solid #EEECE8; color: #171717; text-decoration: none">
+<span style="font-size: 16px; font-weight: 500; line-height: 22px">{{n.title}}</span>
+<span style="font-size: 14px; line-height: 20px; color: #3D3D3D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.snippet}}</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5C5C5C"><span aria-hidden="true">{{n.emoji}}</span><span>{{n.meta}}</span><span style="color: #8A5A00; font-weight: 500">{{n.sync}}</span></span>
+</a>
+</sc-for>
+<p style="margin: 0; font-size: 13px; line-height: 19px; color: #5C5C5C; padding-top: 14px">Everything stays readable and editable. Nothing is lost while the server is away.</p>
+</div>
+
+<a href="Note.dc.html" aria-label="New note" style="position: absolute; right: 20px; bottom: 96px; width: 56px; height: 56px; border-radius: 18px; background: #D4213D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(140,20,39,0.28)"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2.2"><path d="M12 5v14M5 12h14"></path></svg></a>
+
+<nav aria-label="Main" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px 12px 0; border-top: 1px solid #EEECE8; background: #FFFFFF">
+<sc-for list="{{tabs}}" as="tab" hint-placeholder-count="3">
+<a href="{{tab.href}}" style="height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{tab.ink}}; font-size: 11px; font-weight: {{tab.weight}}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" stroke-width="1.9"><path d="{{tab.d}}"></path></svg><span>{{tab.label}}</span></a>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+function tabs(active) {
+return [['Notes', 'Main.dc.html', 'M7 3h8l4 4v14H7z M15 3v4h4 M10 12h6 M10 16h6'], ['Notebooks', 'Notebooks.dc.html', 'M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11 M10 8h5'], ['Search', 'Search.dc.html', 'M11 4a7 7 0 100 14 7 7 0 000-14z M20 20l-4-4']].map(function (t) {
+var on = t[0] === active;
+return { label: t[0], href: t[1], d: t[2], ink: on ? '#B01A31' : '#5C5C5C', weight: on ? 600 : 500 };
+});
+}
+
+return {
+tabs: tabs('Notes'),
+recent: [
+['Kitchen renovation', 'Goal: a working kitchen before March. Money and contractor choices', '🏠', 'Home · 14:20', '· not synced yet'],
+['Ideas inbox', 'Loose thoughts to sort on Sunday', '💡', 'Ideas · 13:05', '· not synced yet'],
+['Weekly review, 23 Nov', 'Went well: shipped the sync fix. Next week starts with planning', '💼', 'Work · 12:40', '· not synced yet'],
+['Shopping for Saturday', 'Milk, oak oil, sandpaper 120, masking tape', '🏠', 'Home · Sun', ""],
+['Offsite planning', 'Venue shortlist and the agenda draft', '💼', 'Work · 12 Nov', ""]
+].map(function (n) { return { title: n[0], snippet: n[1], emoji: n[2], meta: n[3], sync: n[4] }; })
+};
+}
+}
+</script>
+</body>
+</html>
