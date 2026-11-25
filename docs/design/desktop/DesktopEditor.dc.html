@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Editor with slash menu and note info</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; display: flex; flex-wrap: wrap; min-height: 1080px; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<aside style="flex: 1 0 248px; box-sizing: border-box; padding: 20px 14px; display: flex; flex-direction: column; gap: 16px; background: #F6F5F2">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 6px">
+<div aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9px; background: #D4213D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke-width="2.4"><path d="M7 4h7l4 4v12H7z M9.5 12h5 M9.5 16h5"></path></svg></div>
+<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px">WAW Notes</span>
+</div>
+<a href="DesktopEditor.dc.html" style="height: 44px; border-radius: 12px; background: #D4213D; color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">New note</a>
+<a href="DesktopSwitcher.dc.html" style="display: flex; align-items: center; gap: 10px; height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D9D6D0; border-radius: 12px; background: #FFFFFF; color: #5C5C5C; font-size: 14px; text-decoration: none"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="flex-grow: 1; white-space: nowrap">Search notes</span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: nowrap; padding: 2px 6px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">Ctrl K</span></a>
+<nav aria-label="Views" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="2">
+<a href="Desktop.dc.html" style="display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{n.bg}}; color: #171717; font-size: 15px; font-weight: {{n.weight}}; text-decoration: none"><span>{{n.label}}</span><span style="font-size: 13px; color: #5C5C5C">{{n.count}}</span></a>
+</sc-for>
+</nav>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 10px 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">NOTEBOOKS</span>
+<sc-for list="{{books}}" as="b" hint-placeholder-count="6">
+<a href="Desktop.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{b.bg}}; color: #171717; font-size: 15px; font-weight: {{b.weight}}; text-decoration: none"><span aria-hidden="true" style="width: 22px; display: flex; justify-content: center; font-size: 16px; color: #5C5C5C"><span style="display: {{b.emojiShow}}">{{b.emoji}}</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" stroke-width="1.9" style="display: {{b.iconShow}}"><path d="M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11"></path></svg></span><span style="flex-grow: 1">{{b.name}}</span><span style="font-size: 13px; font-weight: 400; color: #5C5C5C">{{b.count}}</span></a>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="padding: 0 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">TAGS</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 0 6px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+<a href="DesktopSwitcher.dc.html" style="padding: 7px 10px; border-radius: 8px; background: #FFFFFF; color: #3D3D3D; font-size: 13px; font-weight: 500; text-decoration: none">{{t.name}}</a>
+</sc-for>
+</div>
+</div>
+<a href="DesktopSettings.dc.html" style="margin-top: auto; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 10px; border-radius: 10px; color: #3D3D3D; font-size: 13px; font-weight: 500; text-decoration: none"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #1F7A4D"></span>home-server · synced</a>
+</aside>
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 14px 28px 40px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 6px; min-height: 44px">
+<span style="font-size: 14px; color: #5C5C5C"><span aria-hidden="true">🏠</span> Home <span aria-hidden="true">/</span> <span style="color: #171717; font-weight: 500">Kitchen renovation</span></span>
+<span style="margin-left: auto; padding-right: 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #1B6943"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #1F7A4D"></span>Editing</span>
+<button type="button" aria-label="Pin note" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="19" height="19" stroke-width="1.9"><path d="M9 4h6l-1 6 3 3H7l3-3z M12 13v7"></path></svg></button>
+<a href="DesktopEditor.dc.html" aria-label="Note info" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 10px; background: #F6F5F2"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="19" height="19" stroke-width="1.9"><path d="M4 5h16v14H4z M14 5v14"></path></svg></a>
+<button type="button" aria-label="More actions" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="19" height="19" stroke-width="3"><path d="M5 12h.01 M12 12h.01 M19 12h.01"></path></svg></button>
+</div>
+<article style="width: 100%; max-width: 680px; box-sizing: border-box; margin: 0 auto; padding-top: 28px; display: flex; flex-direction: column; gap: 14px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 36px; line-height: 44px; letter-spacing: -0.6px">Kitchen renovation</h1>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; color: #5C5C5C"><span>Edited today, 14:20</span><span style="padding: 2px 8px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D; font-weight: 500">#renovation</span><span style="padding: 2px 8px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D; font-weight: 500">#home</span></div>
+<p style="margin: 0; font-size: 16px; line-height: 27px">Goal: a working kitchen before March. Money and contractor choices live in <a href="DesktopSwitcher.dc.html" style="color: #B01A31; font-weight: 500; text-decoration: underline; text-underline-offset: 3px">Budget 2027</a>.</p>
+
+<h2 style="margin: 10px 0 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 22px; line-height: 28px; letter-spacing: -0.2px">Decisions</h2>
+<ul style="margin: 0; padding-left: 22px; font-size: 16px; line-height: 27px"><li>Oak worktop, not laminate</li><li>Keep the old tiles behind the stove</li></ul>
+<h2 style="margin: 10px 0 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 22px; line-height: 28px; letter-spacing: -0.2px">To do</h2>
+<div style="display: flex; flex-direction: column; margin: -6px 0 0 -10px">
+<div style="display: flex; align-items: center; gap: 0 10px; min-height: 40px"><label style="width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: -10px"><input id="d1" type="checkbox" checked style="width: 20px; height: 20px; accent-color: #171717"></label><label for="d1" style="font-size: 16px; color: #5C5C5C; text-decoration: line-through">Measure the walls</label></div>
+<div style="display: flex; align-items: center; gap: 0 10px; min-height: 40px"><label style="width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: -10px"><input id="d2" type="checkbox" style="width: 20px; height: 20px; accent-color: #171717"></label><label for="d2" style="font-size: 16px">Get three quotes</label><a href="DesktopTasks.dc.html" style="display: flex; align-items: center; min-height: 40px; text-decoration: none"><span style="padding: 2px 8px; border-radius: 6px; background: #FCEBEE; color: #8C1427; font-size: 13px; font-weight: 500; white-space: nowrap">In WAW Tasks · Fri</span></a></div>
+<div style="display: flex; align-items: center; gap: 0 10px; min-height: 40px"><label style="width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: -10px"><input id="d3" type="checkbox" style="width: 20px; height: 20px; accent-color: #171717"></label><label for="d3" style="font-size: 16px">Choose the worktop</label></div>
+</div>
+
+<div style="position: relative">
+<p style="margin: 0; font-size: 16px; line-height: 27px"><span style="padding: 2px 6px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D; font-weight: 500">/</span><span aria-hidden="true" style="display: inline-block; width: 2px; height: 22px; margin-left: 1px; background: #D4213D; vertical-align: text-bottom"></span></p>
+<div role="listbox" aria-label="Insert a block" style="position: absolute; top: 36px; left: 0; z-index: 2; width: 320px; box-sizing: border-box; padding: 8px; border: 1px solid #E4E2DD; border-radius: 14px; background: #FFFFFF; box-shadow: 0 12px 32px rgba(23,23,23,0.14); display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{blocks}}" as="b" hint-placeholder-count="10">
+<div role="option" aria-selected="{{b.sel}}" style="display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 10px; border-radius: 8px; background: {{b.bg}}; font-size: 14px; font-weight: 500"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" stroke-width="1.9" style="flex-shrink: 0; color: #3D3D3D"><path d="{{b.d}}"></path></svg><span style="flex-grow: 1">{{b.label}}</span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #5C5C5C">{{b.hint}}</span></div>
+</sc-for>
+<span style="margin-top: 4px; padding: 10px 10px 4px; border-top: 1px solid #EEECE8; font-size: 12px; line-height: 17px; color: #5C5C5C">Markdown shortcuts on the right work too. Nothing to install.</span>
+</div>
+</div>
+</article>
+</main>
+<aside aria-label="Note info" style="flex: 1 1 300px; max-width: 340px; box-sizing: border-box; padding: 14px 24px 32px; border-left: 1px solid #EEECE8; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between; min-height: 44px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px">Note info</h2>
+<a href="Desktop.dc.html" aria-label="Close note info" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0; margin-right: -12px"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="19" height="19" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">OUTLINE</span>
+<sc-for list="{{outline}}" as="o" hint-placeholder-count="2">
+<a href="DesktopEditor.dc.html" style="display: flex; align-items: center; min-height: 40px; font-size: 15px; color: #171717; text-decoration: none">{{o.name}}</a>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">LINKED FROM · 2</span>
+<sc-for list="{{linkedFrom}}" as="l" hint-placeholder-count="2">
+<a href="Desktop.dc.html" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 48px; color: #171717; text-decoration: none"><span style="font-size: 15px; font-weight: 500">{{l.title}}</span><span style="font-size: 13px; color: #5C5C5C">{{l.meta}}</span></a>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">LINKS TO · 1</span>
+<a href="Desktop.dc.html" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 48px; color: #171717; text-decoration: none"><span style="font-size: 15px; font-weight: 500">Budget 2027</span><span style="font-size: 13px; color: #5C5C5C">Home · edited yesterday</span></a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">DETAILS</span>
+<sc-for list="{{details}}" as="d" hint-placeholder-count="4">
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px"><span style="color: #5C5C5C">{{d.k}}</span><span>{{d.v}}</span></div>
+</sc-for>
+</div>
+<button type="button" style="margin-top: auto; align-self: flex-start; height: 44px; padding: 0; border: none; background: transparent; color: #B01A31; font-family: inherit; font-size: 14px; font-weight: 600">Export as Markdown</button>
+</aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+function side(active) {
+var on = function (k) { return k === active; };
+return {
+nav: [['All notes', '42'], ['Pinned', '3']].map(function (n) { return { label: n[0], count: n[1], bg: on(n[0]) ? '#FFFFFF' : 'transparent', weight: on(n[0]) ? 600 : 500 }; }),
+books: [['🏠', 'Home', '12'], ['💼', 'Work', '14'], ['📚', 'Reading', '6'], ['✈️', 'Travel', '4'], ['💡', 'Ideas', '4'], ["", 'Recipes', '2']].map(function (b) { return { emoji: b[0], name: b[1], count: b[2], emojiShow: b[0] ? 'inline' : 'none', iconShow: b[0] ? 'none' : 'block', bg: on(b[1]) ? '#FFFFFF' : 'transparent', weight: on(b[1]) ? 600 : 500 }; }),
+tags: ['#renovation', '#meeting', '#book', '#idea', '#recipe'].map(function (t) { return { name: t }; })
+};
+}
+
+var blocks = [
+['Heading', 'M6 5v14 M18 5v14 M6 12h12', '#'],
+['Bulleted list', 'M9 7h11 M9 12h11 M9 17h11 M4.5 7h.01 M4.5 12h.01 M4.5 17h.01', '-'],
+['Numbered list', 'M10 7h10 M10 12h10 M10 17h10 M4 6h1v3 M4 15h2l-2 3h2', '1.'],
+['Checklist', 'M4 7l2 2 3-4 M4 16l2 2 3-4 M13 7h7 M13 16h7', '[]'],
+['Quote', 'M6 6v12 M10 9h9 M10 15h6', '>'],
+['Code', 'M9 8l-4 4 4 4 M15 8l4 4-4 4', '```'],
+['Table', 'M4 5h16v14H4z M4 10h16 M4 15h16 M10 5v14', ""],
+['Image', 'M4 5h16v14H4z M4 16l5-5 4 4 3-3 4 4 M15 9h.01', ""],
+['Divider', 'M4 12h16', '---'],
+['Link to note', 'M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1 M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1', '[[']
+].map(function (b, i) { return { label: b[0], d: b[1], hint: b[2], sel: i === 3 ? 'true' : 'false', bg: i === 3 ? '#F6F5F2' : 'transparent' }; });
+
+return Object.assign(side('Home'), {
+blocks: blocks,
+outline: [{ name: 'Decisions' }, { name: 'To do' }],
+linkedFrom: [{ title: 'Budget 2027', meta: 'Home · edited yesterday' }, { title: 'Weekly review, 23 Nov', meta: 'Work · edited Mon' }],
+details: [['Notebook', 'Home'], ['Created', '12 Nov'], ['Edited', 'Today, 14:20'], ['Words', '148']].map(function (d) { return { k: d[0], v: d[1] }; })
+});
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Send an item to WAW Tasks</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; padding: 56px 0 20px; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<div style="display: flex; align-items: center; gap: 2px; height: 44px; padding: 0 8px">
+<a href="Main.dc.html" aria-label="Back to notes" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<a href="Notebooks.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; font-weight: 500; color: #3D3D3D; text-decoration: none"><span aria-hidden="true">🏠</span>Home</a>
+<span style="margin-left: auto; padding-right: 4px; font-size: 13px; color: #5C5C5C">Saved</span>
+<button type="button" aria-label="Pin note" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="1.9"><path d="M9 4h6l-1 6 3 3H7l3-3z M12 13v7"></path></svg></button>
+<button type="button" aria-label="More actions" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="3"><path d="M5 12h.01 M12 12h.01 M19 12h.01"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 8px 22px 0">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 28px; line-height: 34px; letter-spacing: -0.4px">Kitchen renovation</h1>
+<h2 style="margin: 6px 0 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 20px; line-height: 26px">To do</h2>
+<div style="display: flex; flex-direction: column; margin: -6px -8px 0 -11px">
+<div style="display: flex; align-items: center; gap: 0 8px; min-height: 44px;"><label style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: -8px"><input id="t1" type="checkbox" checked style="width: 22px; height: 22px; accent-color: #171717"></label><label for="t1" style="font-size: 16px; color: #5C5C5C; text-decoration: line-through">Measure the walls</label></div>
+<div style="display: flex; align-items: center; gap: 0 8px; min-height: 44px; border-radius: 12px; background: #F6F5F2;"><label style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: -8px"><input id="t2" type="checkbox" style="width: 22px; height: 22px; accent-color: #171717"></label><label for="t2" style="font-size: 16px">Get three quotes</label><button type="button" aria-label="Item actions" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0; margin-left: auto"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="3"><path d="M5 12h.01 M12 12h.01 M19 12h.01"></path></svg></button></div>
+<div style="display: flex; align-items: center; gap: 0 8px; min-height: 44px;"><label style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: -8px"><input id="t3" type="checkbox" style="width: 22px; height: 22px; accent-color: #171717"></label><label for="t3" style="font-size: 16px">Choose the worktop</label></div>
+</div>
+</div>
+<div role="dialog" aria-label="Send to WAW Tasks" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 10px 16px 28px; border-radius: 20px 20px 0 0; border-top: 1px solid #E4E2DD; background: #FFFFFF; box-shadow: 0 -10px 30px rgba(23,23,23,0.12); display: flex; flex-direction: column; gap: 10px">
+<span aria-hidden="true" style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: #D9D6D0"></span>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 20px">Send to WAW Tasks</h2>
+<a href="Note.dc.html" aria-label="Close" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0; margin-right: -10px"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+<div style="padding: 12px 14px; border: 1px solid #D9D6D0; border-radius: 12px; font-size: 16px; line-height: 30px">Get three quotes <span style="padding: 3px 6px; border-radius: 6px; background: #F6F5F2">fri</span> <span style="padding: 3px 6px; border-radius: 6px; background: #F6F5F2; white-space: nowrap"><span aria-hidden="true" style="display: inline-block; width: 9px; height: 9px; border-radius: 3px; background: #D4213D"></span> #Home</span><span aria-hidden="true" style="display: inline-block; width: 2px; height: 22px; margin-left: 1px; background: #D4213D; vertical-align: text-bottom"></span></div>
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">UNDERSTOOD AS</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><span style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 10px; background: #F6F5F2; font-size: 14px; font-weight: 500">Fri 27 Nov</span><span style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 10px; background: #F6F5F2; font-size: 14px; font-weight: 500"><span aria-hidden="true" style="display: inline-block; width: 9px; height: 9px; border-radius: 3px; background: #D4213D"></span>Home</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #D9D6D0; border-radius: 999px; background: #FFFFFF; color: #171717; font-family: inherit; font-size: 14px; font-weight: 500">Date</button><button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #D9D6D0; border-radius: 999px; background: #FFFFFF; color: #171717; font-family: inherit; font-size: 14px; font-weight: 500">Priority</button><button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #D9D6D0; border-radius: 999px; background: #FFFFFF; color: #171717; font-family: inherit; font-size: 14px; font-weight: 500">Project</button></div>
+<a href="TaskLinked.dc.html" style="height: 54px; box-sizing: border-box; border: none; border-radius: 14px; background: #D4213D; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; margin-top: 4px">Create task</a>
+<p style="margin: 0; font-size: 13px; line-height: 19px; color: #5C5C5C">The item stays in this note. Ticking it here or in WAW Tasks ticks both.</p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

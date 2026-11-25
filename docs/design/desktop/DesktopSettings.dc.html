@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings on desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; display: flex; flex-wrap: wrap; min-height: 900px; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<aside style="flex: 1 0 248px; box-sizing: border-box; padding: 20px 14px; display: flex; flex-direction: column; gap: 16px; background: #F6F5F2">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 6px">
+<div aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9px; background: #D4213D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke-width="2.4"><path d="M7 4h7l4 4v12H7z M9.5 12h5 M9.5 16h5"></path></svg></div>
+<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px">WAW Notes</span>
+</div>
+<a href="DesktopEditor.dc.html" style="height: 44px; border-radius: 12px; background: #D4213D; color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">New note</a>
+<a href="DesktopSwitcher.dc.html" style="display: flex; align-items: center; gap: 10px; height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D9D6D0; border-radius: 12px; background: #FFFFFF; color: #5C5C5C; font-size: 14px; text-decoration: none"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="flex-grow: 1; white-space: nowrap">Search notes</span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: nowrap; padding: 2px 6px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">Ctrl K</span></a>
+<nav aria-label="Views" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="2">
+<a href="Desktop.dc.html" style="display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{n.bg}}; color: #171717; font-size: 15px; font-weight: {{n.weight}}; text-decoration: none"><span>{{n.label}}</span><span style="font-size: 13px; color: #5C5C5C">{{n.count}}</span></a>
+</sc-for>
+</nav>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 10px 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">NOTEBOOKS</span>
+<sc-for list="{{books}}" as="b" hint-placeholder-count="6">
+<a href="Desktop.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{b.bg}}; color: #171717; font-size: 15px; font-weight: {{b.weight}}; text-decoration: none"><span aria-hidden="true" style="width: 22px; display: flex; justify-content: center; font-size: 16px; color: #5C5C5C"><span style="display: {{b.emojiShow}}">{{b.emoji}}</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" stroke-width="1.9" style="display: {{b.iconShow}}"><path d="M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11"></path></svg></span><span style="flex-grow: 1">{{b.name}}</span><span style="font-size: 13px; font-weight: 400; color: #5C5C5C">{{b.count}}</span></a>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="padding: 0 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">TAGS</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 0 6px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+<a href="DesktopSwitcher.dc.html" style="padding: 7px 10px; border-radius: 8px; background: #FFFFFF; color: #3D3D3D; font-size: 13px; font-weight: 500; text-decoration: none">{{t.name}}</a>
+</sc-for>
+</div>
+</div>
+<a href="DesktopSettings.dc.html" style="margin-top: auto; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 10px; border-radius: 10px; color: #3D3D3D; font-size: 13px; font-weight: 500; text-decoration: none"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #1F7A4D"></span>home-server · synced</a>
+</aside>
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 32px 36px 40px; display: flex; flex-direction: column; gap: 22px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 30px; letter-spacing: -0.4px">Settings</h1>
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px 28px">
+<section style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 8px"><h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">SERVER</h2><div style="display: flex; flex-direction: column; border: 1px solid #E4E2DD; border-radius: 14px"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; font-size: 15px"><span style="color: #5C5C5C">Address</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500">notes.example.com</span></div><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; border-top: 1px solid #EEECE8; font-size: 15px"><span style="color: #5C5C5C">Sync</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500"><span aria-hidden="true" style="width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; background: #1F7A4D"></span>Up to date</span></div><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; border-top: 1px solid #EEECE8; font-size: 15px"><span style="color: #5C5C5C">Version</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500">API v1</span></div></div></section>
+<section style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 8px"><h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">WAW TASKS</h2><div style="display: flex; flex-direction: column; border: 1px solid #E4E2DD; border-radius: 14px"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; font-size: 15px"><span style="color: #5C5C5C">Server</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500"><span aria-hidden="true" style="width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; background: #1F7A4D"></span>tasks.example.com<button type="button" style="height: 44px; padding: 0 4px; border: none; background: transparent; color: #B01A31; font-family: inherit; font-size: 14px; font-weight: 600">Change</button></span></div><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; border-top: 1px solid #EEECE8; font-size: 15px"><span style="color: #5C5C5C">New tasks go to</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500">The project you type, else Inbox</span></div></div><p style="margin: 0; font-size: 13px; line-height: 19px; color: #5C5C5C">Checklist items can become tasks. Done stays in sync in both apps.</p></section>
+<section style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 8px"><h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">WAW BOT ACCESS</h2><div style="display: flex; flex-direction: column; border: 1px solid #E4E2DD; border-radius: 14px"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; font-size: 15px"><span style="color: #5C5C5C">MCP URL</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500"><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 400">https://notes.example.com/mcp</span><button type="button" style="height: 44px; padding: 0 4px; border: none; background: transparent; color: #B01A31; font-family: inherit; font-size: 14px; font-weight: 600">Copy</button></span></div><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; border-top: 1px solid #EEECE8; font-size: 15px"><span style="color: #5C5C5C">Token for bots</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500">Separate from yours<button type="button" style="height: 44px; padding: 0 4px; border: none; background: transparent; color: #B01A31; font-family: inherit; font-size: 14px; font-weight: 600">Create</button></span></div></div><p style="margin: 0; font-size: 13px; line-height: 19px; color: #5C5C5C">Paste both into WAW Bot under Connectors. Bots can then search, read and add notes.</p></section>
+<section style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 8px"><h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">DESKTOP APP</h2><div style="display: flex; flex-direction: column; border: 1px solid #E4E2DD; border-radius: 14px"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 4px 0 14px;"><label for="g1" style="font-size: 15px">Open at login</label><span style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center"><input id="g1" type="checkbox" checked style="width: 20px; height: 20px; accent-color: #171717"></span></div><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 4px 0 14px; border-top: 1px solid #EEECE8;"><label for="g2" style="font-size: 15px">Keep running in the menu bar or tray</label><span style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center"><input id="g2" type="checkbox" checked style="width: 20px; height: 20px; accent-color: #171717"></span></div><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 0 14px; border-top: 1px solid #EEECE8; font-size: 15px"><span style="color: #5C5C5C">Quick note shortcut</span><span style="display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500"><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 400; padding: 3px 7px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D">Ctrl or Cmd + Shift + N</span></span></div></div></section>
+<section style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 8px"><h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">PAIR A PHONE</h2><div style="display: flex; flex-direction: column; border: 1px solid #E4E2DD; border-radius: 14px"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 14px"><div role="img" aria-label="QR code" style="width: 96px; height: 96px; flex-shrink: 0; border: 1px solid #D9D6D0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #5C5C5C">QR code</div><p style="flex: 1 1 200px; margin: 0; font-size: 14px; line-height: 21px; color: #3D3D3D">Open WAW Notes on your phone and scan this code. It carries the server address and a one-time token.</p></div></div></section>
+<section style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 8px"><h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">YOUR NOTES</h2><div style="display: flex; flex-direction: column; border: 1px solid #E4E2DD; border-radius: 14px"><button type="button" style="display: flex; align-items: center; justify-content: space-between; min-height: 50px; padding: 0 14px; border: none; background: transparent; color: #171717; font-family: inherit; font-size: 15px; font-weight: 500; text-align: left">Export all notes as Markdown<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" stroke-width="2" style="flex-shrink: 0; color: #5C5C5C"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" style="display: flex; align-items: center; justify-content: space-between; min-height: 50px; padding: 0 14px; border: none; background: transparent; color: #171717; font-family: inherit; font-size: 15px; font-weight: 500; text-align: left; border-top: 1px solid #EEECE8">Import Markdown files<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" stroke-width="2" style="flex-shrink: 0; color: #5C5C5C"><path d="M9 5l7 7-7 7"></path></svg></button></div><p style="margin: 0; font-size: 13px; line-height: 19px; color: #5C5C5C">Notes are plain Markdown. You can take them out at any time.</p></section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+function side(active) {
+var on = function (k) { return k === active; };
+return {
+nav: [['All notes', '42'], ['Pinned', '3']].map(function (n) { return { label: n[0], count: n[1], bg: on(n[0]) ? '#FFFFFF' : 'transparent', weight: on(n[0]) ? 600 : 500 }; }),
+books: [['🏠', 'Home', '12'], ['💼', 'Work', '14'], ['📚', 'Reading', '6'], ['✈️', 'Travel', '4'], ['💡', 'Ideas', '4'], ["", 'Recipes', '2']].map(function (b) { return { emoji: b[0], name: b[1], count: b[2], emojiShow: b[0] ? 'inline' : 'none', iconShow: b[0] ? 'none' : 'block', bg: on(b[1]) ? '#FFFFFF' : 'transparent', weight: on(b[1]) ? 600 : 500 }; }),
+tags: ['#renovation', '#meeting', '#book', '#idea', '#recipe'].map(function (t) { return { name: t }; })
+};
+}
+
+return side("");
+}
+}
+</script>
+</body>
+</html>

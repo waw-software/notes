@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Notebook name and icon</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; padding: 56px 0 20px; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px; padding: 0 16px">
+<a href="Notebook.dc.html" style="display: flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 500; color: #3D3D3D; text-decoration: none">Cancel</a>
+<span style="font-size: 16px; font-weight: 600">Edit notebook</span>
+<a href="Notebook.dc.html" style="display: flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 600; text-decoration: none">Save</a>
+</div>
+<div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; padding: 14px 20px 0; overflow: hidden">
+<div aria-hidden="true" style="align-self: center; width: 84px; height: 84px; border-radius: 24px; background: #F6F5F2; color: #5C5C5C; display: flex; align-items: center; justify-content: center; font-size: 42px"><span>{{picked}}</span><sc-if value="{{noIcon}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="38" height="38" stroke-width="1.7"><path d="M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11"></path></svg></sc-if></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="nb" style="font-size: 14px; font-weight: 500; color: #3D3D3D">Name</label><input id="nb" type="text" value="Home" style="height: 52px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D9D6D0; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #171717"></div>
+<span style="padding-top: 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: #5C5C5C">ICON</span>
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{icons}}" as="i" hint-placeholder-count="18">
+<button type="button" aria-label="{{i.label}}" aria-pressed="{{i.pressed}}" onClick="{{i.pick}}" style="height: 48px; padding: 0; border: 2px solid {{i.border}}; border-radius: 12px; background: {{i.bg}}; font-size: 22px">{{i.emoji}}</button>
+</sc-for>
+</div>
+<button type="button" aria-pressed="{{nonePressed}}" onClick="{{pickNone}}" style="height: 52px; box-sizing: border-box; border: 1px solid #D9D6D0; border-radius: 14px; background: #FFFFFF; color: #171717; font-family: inherit; font-size: 16px; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; border: 2px solid {{noneBorder}}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="1.9" style="color: #5C5C5C"><path d="M6 4h11a2 2 0 012 2v14H8a2 2 0 01-2-2z M6 18a2 2 0 012-2h11"></path></svg>Use the default icon</button>
+<p style="margin: 0; font-size: 13px; line-height: 19px; color: #5C5C5C">Any emoji from the keyboard works too. Without one, the notebook gets the default icon.</p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+var self = this;
+var picked = this.state && this.state.picked !== undefined ? this.state.picked : '🏠';
+var icons = [['🏠', 'Home'], ['💼', 'Work'], ['📚', 'Books'], ['✈️', 'Travel'], ['💡', 'Idea'], ['🍳', 'Cooking'], ['💰', 'Money'], ['🎯', 'Goals'], ['🌱', 'Plants'], ['🎵', 'Music'], ['🏋️', 'Sport'], ['🧳', 'Trips'], ['🛠️', 'Tools'], ['📷', 'Photos'], ['🎓', 'Study'], ['❤️', 'Family'], ['🚗', 'Car'], ['🐾', 'Pets']].map(function (e) {
+var on = e[0] === picked;
+return { emoji: e[0], label: e[1], pressed: on ? 'true' : 'false', border: on ? '#171717' : 'transparent', bg: on ? '#FFFFFF' : '#F6F5F2', pick: function () { self.setState({ picked: e[0] }); } };
+});
+var none = picked === "";
+return { picked: picked, noIcon: none, icons: icons, nonePressed: none ? 'true' : 'false', noneBorder: none ? '#171717' : '#D9D6D0', pickNone: function () { self.setState({ picked: "" }); } };
+}
+}
+</script>
+</body>
+</html>

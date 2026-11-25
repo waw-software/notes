@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Insert a block</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B01A31}a:hover{color:#8C1427}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; padding: 56px 0 20px; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; color: #171717; font-family: Inter, system-ui, sans-serif">
+<div style="display: flex; align-items: center; gap: 2px; height: 44px; padding: 0 8px">
+<a href="Main.dc.html" aria-label="Back to notes" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<a href="Notebooks.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; font-weight: 500; color: #3D3D3D; text-decoration: none"><span aria-hidden="true">🏠</span>Home</a>
+<span style="margin-left: auto; padding-right: 4px; font-size: 13px; color: #5C5C5C">Editing</span>
+<button type="button" aria-label="Pin note" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="1.9"><path d="M9 4h6l-1 6 3 3H7l3-3z M12 13v7"></path></svg></button>
+<button type="button" aria-label="More actions" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="3"><path d="M5 12h.01 M12 12h.01 M19 12h.01"></path></svg></button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 8px 22px 0">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 28px; line-height: 34px; letter-spacing: -0.4px">Kitchen renovation</h1>
+<p style="margin: 0; font-size: 16px; line-height: 26px">Goal: a working kitchen before March. Money and contractor choices live in <span style="color: #B01A31; font-weight: 500; text-decoration: underline; text-underline-offset: 3px">Budget 2027</span>.</p>
+<p style="margin: 0; font-size: 16px; line-height: 26px"><span style="padding: 2px 6px; border-radius: 6px; background: #F6F5F2; color: #3D3D3D; font-weight: 500">/</span><span aria-hidden="true" style="display: inline-block; width: 2px; height: 22px; margin-left: 1px; background: #D4213D; vertical-align: text-bottom"></span></p>
+</div>
+<div role="dialog" aria-label="Insert a block" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 10px 16px 28px; border-radius: 20px 20px 0 0; border-top: 1px solid #E4E2DD; background: #FFFFFF; box-shadow: 0 -10px 30px rgba(23,23,23,0.12); display: flex; flex-direction: column; gap: 10px">
+<span aria-hidden="true" style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: #D9D6D0"></span>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 20px">Insert</h2>
+<a href="Note.dc.html" aria-label="Close" style="width: 44px; height: 44px; flex-shrink: 0; border: none; background: transparent; color: #171717; display: flex; align-items: center; justify-content: center; padding: 0; margin-right: -10px"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{blocks}}" as="b" hint-placeholder-count="10">
+<button type="button" style="display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 12px; border: 1px solid #E4E2DD; border-radius: 12px; background: #FFFFFF; color: #171717; font-family: inherit; font-size: 15px; font-weight: 500; text-align: left"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="1.9" style="flex-shrink: 0; color: #3D3D3D"><path d="{{b.d}}"></path></svg><span>{{b.label}}</span></button>
+</sc-for>
+</div>
+<p style="margin: 2px 0 0; font-size: 13px; line-height: 19px; color: #5C5C5C">Everything is built in. Nothing to install or set up.</p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+var blocks = [
+['Heading', 'M6 5v14 M18 5v14 M6 12h12', '#'],
+['Bulleted list', 'M9 7h11 M9 12h11 M9 17h11 M4.5 7h.01 M4.5 12h.01 M4.5 17h.01', '-'],
+['Numbered list', 'M10 7h10 M10 12h10 M10 17h10 M4 6h1v3 M4 15h2l-2 3h2', '1.'],
+['Checklist', 'M4 7l2 2 3-4 M4 16l2 2 3-4 M13 7h7 M13 16h7', '[]'],
+['Quote', 'M6 6v12 M10 9h9 M10 15h6', '>'],
+['Code', 'M9 8l-4 4 4 4 M15 8l4 4-4 4', '```'],
+['Table', 'M4 5h16v14H4z M4 10h16 M4 15h16 M10 5v14', ""],
+['Image', 'M4 5h16v14H4z M4 16l5-5 4 4 3-3 4 4 M15 9h.01', ""],
+['Divider', 'M4 12h16', '---'],
+['Link to note', 'M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1 M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1', '[[']
+].map(function (b, i) { return { label: b[0], d: b[1], hint: b[2], sel: i === 3 ? 'true' : 'false', bg: i === 3 ? '#F6F5F2' : 'transparent' }; });
+
+return { blocks: blocks };
+}
+}
+</script>
+</body>
+</html>
