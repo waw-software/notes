@@ -14,14 +14,6 @@
 		"@expo/dom-webview": "~58.0.2",
 		"@expo/metro-runtime": "58.0.17",
 		"@milkdown/kit": "7.23.0",
-		"@tiptap/core": "3.35.0",
-		"@tiptap/extension-image": "3.35.0",
-		"@tiptap/extension-list": "3.35.0",
-		"@tiptap/extension-table": "3.35.0",
-		"@tiptap/markdown": "3.35.0",
-		"@tiptap/pm": "3.35.0",
-		"@tiptap/react": "3.35.0",
-		"@tiptap/starter-kit": "3.35.0",
 		"expo": "~58.0.26",
 		"react": "19.3.0",
 		"react-dom": "19.3.0",
@@ -60,12 +52,11 @@
 					]
 				},
 				"transformIgnorePatterns": [
-					"/node_modules/(?!(\\.pnpm|react-native|@react-native|expo|@expo)|(@tiptap/[^/]+|@milkdown/[^/]+|@ocavue/[^/]+|@codemirror/[^/]+|@lezer/[^/]+|@marijn/[^/]+|prosemirror-[^/]+|remark(-[^/]+)?|mdast-util-[^/]+|micromark(-[^/]+)?|unist-util-[^/]+|unified|bail|trough|vfile(-message)?|devlop|is-plain-obj|zwitch|longest-streak|markdown-table|ccount|escape-string-regexp|character-entities|decode-named-character-reference|lodash-es|linkifyjs|marked|nanoid|entities|orderedmap|rope-sequence|w3c-keyname|style-mod|crelt|fast-equals)/)",
+					"/node_modules/(?!(\\.pnpm|react-native|@react-native|expo|@expo)|(@milkdown/[^/]+|@ocavue/[^/]+|@codemirror/[^/]+|@lezer/[^/]+|@marijn/[^/]+|prosemirror-[^/]+|remark(-[^/]+)?|mdast-util-[^/]+|micromark(-[^/]+)?|unist-util-[^/]+|unified|bail|trough|vfile(-message)?|devlop|is-plain-obj|zwitch|longest-streak|markdown-table|ccount|escape-string-regexp|character-entities|decode-named-character-reference|lodash-es|nanoid|entities|orderedmap|rope-sequence|w3c-keyname|style-mod|crelt)/)",
 					"/node_modules/@react-native/babel-preset/"
 				],
 				"moduleNameMapper": {
-					"^dedent$": "<rootDir>/../../node_modules/.pnpm/node_modules/dedent/dist/dedent.js",
-					"^fast-equals$": "<rootDir>/../../node_modules/.pnpm/node_modules/fast-equals/dist/cjs/index.cjs"
+					"^dedent$": "<rootDir>/../../node_modules/.pnpm/node_modules/dedent/dist/dedent.js"
 				}
 			}
 		]
