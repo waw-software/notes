@@ -1,0 +1,17 @@
+{
+	"global": [
+		"apps/client/App.tsx",
+		"apps/client/app.json",
+		"apps/client/index.ts"
+	],
+	"screens": [
+		{
+			"id": "shell",
+			"title": "Client shell",
+			"path": "/",
+			"sources": ["apps/client/App.tsx"],
+			"mobile": { "mockup": null },
+			"desktop": { "mockup": null }
+		}
+	]
+}

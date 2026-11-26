@@ -1,0 +1,14 @@
+{
+	"name": "@waw-notes/e2e",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"test": "vitest run --dir visual",
+		"e2e": "playwright test"
+	},
+	"devDependencies": {
+		"@playwright/test": "1.65.1"
+	}
+}
