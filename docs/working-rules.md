@@ -22,7 +22,9 @@
 - Follow the build order in [SPEC.md section 8](SPEC.md#8-build-order-proposed), one vertical slice per PR: API, screen and tests together.
 - Slice 0 is a spike on the editor component. Do it first; much of the plan depends on its result.
 - Each slice must run end to end against a real server started from the compose file.
-- After each slice, compare the built screen with its mockup at 390 px wide (mobile) and 1440 px wide (desktop), and note any differences you left.
+- After each slice that changes a screen, run `scripts/visual.sh`: it captures the touched screens at 390 px, at 1440 px, in the Electron window and, with `--ios` on a Mac, in the iOS simulator, next to their mockups from [design/screens/](design/screens/).
+  A slice that adds a screen first registers it in `apps/e2e/visual/screens.json` (path, source files, mockup names, or `null` when there is no mockup).
+  The tester lists every difference from the mockup that is left in a `## Visual check` section of the pull request.
 
 ## Related apps
 

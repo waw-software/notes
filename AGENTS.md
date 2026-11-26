@@ -10,6 +10,7 @@ Stack: [ADR 0001](docs/decisions/0001-client-and-server-stack.md); editor compon
 Stage: growing.
 Read first: `docs/SPEC.md`, `docs/DESIGN.md`, `docs/requirements.md`, `docs/working-rules.md`, `docs/decisions/README.md`.
 Commands: Node 24.21.0 and pnpm 12.21.0; `scripts/env.sh setup` installs from the lockfile, `scripts/check.sh` is the full check, and `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` or `pnpm build` run one part.
+`scripts/env.sh e2e` runs the end-to-end tests (Playwright, in `apps/e2e`); `scripts/visual.sh` captures the screens a change touches next to their mockups.
 <!-- project:end -->
 
 ## Commands

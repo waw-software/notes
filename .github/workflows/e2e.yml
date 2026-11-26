@@ -1,0 +1,40 @@
+# The end-to-end tests in CI (E2E in .claude/harness.conf): after the project's setup command it
+# installs xvfb and Chromium, then runs scripts/env.sh e2e (server, web at 390 and 1440 px, and
+# the Electron window). It is not a required check. It is a workflow of its own because check.yml
+# is template-owned.
+name: e2e
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # By hand, or by a workflow: a pull request opened with GITHUB_TOKEN starts no run by itself.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    # Set the repository variable CI_RUNS_ON (a JSON array of runner labels) to run elsewhere.
+    runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '["ubuntu-latest"]') }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+
+      - name: setup
+        run: scripts/env.sh setup
+
+      # The Electron window needs a display; scripts/project/e2e.sh runs it under xvfb-run.
+      - name: install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      - name: install Chromium
+        run: scripts/project/pnpm.sh --filter @waw-notes/e2e exec playwright install --with-deps chromium
+
+      - name: e2e
+        run: scripts/env.sh e2e
