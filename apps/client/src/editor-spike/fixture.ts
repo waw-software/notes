@@ -36,6 +36,8 @@ export const NONCANONICAL_SAMPLE: string = `${[
 	"",
 	"A paragraph with __bold__ and _italic_.",
 	"",
+	"Plain text: a < b & c > d, snake_case, 2*3, ~x [y].",
+	"",
 	"* Pack a bag",
 	"* Charge the phone",
 	"",
