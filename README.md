@@ -20,9 +20,10 @@ decision records, and the template integrity. `--verbose` prints everything, and
 returns at once when nothing changed since the last passing run. CI runs the same check in the
 `check` workflow.
 
-Requires Git, bash, and Node.js 20 or later; nothing else to install. External links are not
-checked; a project that wants it adds a check such as [lychee](https://lychee.cli.rs/) in
-`scripts/checks.d/`.
+Requires Git, bash, Node.js 24.21.0 (`.nvmrc`) and pnpm 12.21.0 (`packageManager` in
+`package.json`); `scripts/env.sh setup` installs the dependencies from the lockfile. External
+links are not checked; a project that wants it adds a check such as
+[lychee](https://lychee.cli.rs/) in `scripts/checks.d/`.
 
 ## Pull requests
 

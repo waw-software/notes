@@ -13,6 +13,7 @@ high *migrations/*
 high *billing/*
 high *payments/*
 high contracts/*
+high packages/api-contract/src/*
 
 # Gates: workflows, the project's checks and Stop hooks, and the harness settings. Add the gate
 # files of the stack: manifests, lock files, toolchain, linter, formatter, type checker, test
@@ -23,3 +24,19 @@ gate .claude/hooks/project/*
 gate .claude/harness.conf
 gate .claude/settings.project.json
 gate .claude/path-classes
+
+# Stack gates: manifests, lockfile, toolchain, linter, formatter, type checker, test runner.
+gate package.json
+gate */package.json
+gate pnpm-workspace.yaml
+gate pnpm-lock.yaml
+gate .npmrc
+gate .nvmrc
+gate biome.json
+gate tsconfig*.json
+gate */tsconfig*.json
+gate vitest.config.*
+gate */vitest.config.*
+gate apps/client/app.json
+gate apps/desktop/electron.vite.config.ts
+gate scripts/project/*

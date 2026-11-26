@@ -1,0 +1,19 @@
+{
+	"name": "@waw-notes/server",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"start:api": "node dist/api.js",
+		"start:worker": "node dist/worker.js",
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@fastify/type-provider-typebox": "6.3.0",
+		"@waw-notes/api-contract": "workspace:*",
+		"fastify": "5.12.8",
+		"typebox": "1.4.7"
+	}
+}
