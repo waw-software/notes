@@ -1,3 +1,4 @@
+import { statSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { app, BrowserWindow, net, protocol } from "electron";
@@ -30,7 +31,7 @@ app.whenReady().then(() => {
 
 	protocol.handle(APP_SCHEME, (request) => {
 		const file = resolveExportFile(exportRoot, request.url);
-		if (!file) {
+		if (!file || !statSync(file, { throwIfNoEntry: false })?.isFile()) {
 			return new Response("Not found", { status: 404 });
 		}
 		return net.fetch(pathToFileURL(file).toString());

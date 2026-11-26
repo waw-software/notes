@@ -3,7 +3,8 @@
 set -uo pipefail
 cd "$(dirname "$0")/../.." || exit 1
 if [ ! -d node_modules ]; then
-  scripts/project/quiet.sh "setup" scripts/project/setup.sh || exit 1
+  echo "FAIL: dependencies are not installed; run scripts/env.sh setup"
+  exit 1
 fi
 failed=0
 scripts/project/quiet.sh "format:check" scripts/project/pnpm.sh run format:check || failed=1
