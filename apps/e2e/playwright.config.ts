@@ -46,7 +46,8 @@ export default defineConfig({
 			command: "node ../server/dist/api.js",
 			url: `${SERVER_URL}/health`,
 			env: { PORT: "3100", HOST: "127.0.0.1" },
-			reuseExistingServer: !process.env.CI,
+			// A process already on the port fails the run instead of being tested.
+			reuseExistingServer: false,
 			timeout: 120_000,
 		},
 		{
@@ -54,7 +55,8 @@ export default defineConfig({
 				"../../scripts/project/pnpm.sh --filter @waw-notes/client exec expo serve --port 8090",
 			url: CLIENT_URL,
 			env: { CI: "1", EXPO_OFFLINE: "1", EXPO_NO_TELEMETRY: "1" },
-			reuseExistingServer: !process.env.CI,
+			// A process already on the port fails the run instead of being tested.
+			reuseExistingServer: false,
 			timeout: 120_000,
 		},
 	],

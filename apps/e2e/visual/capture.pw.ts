@@ -1,4 +1,5 @@
-// Captures the screens of one visual run. Playwright runs it, started by run.ts.
+// Captures the screens of one visual run. Without VISUAL_SCREENS it defines no tests; run it
+// through scripts/visual.sh, which sets VISUAL_SCREENS and VISUAL_OUT for run.ts's Playwright.
 import { join, resolve } from "node:path";
 import { type Page, test } from "@playwright/test";
 import { launchDesktop, setDesktopSize } from "../electron.ts";
@@ -27,8 +28,8 @@ function requiredEnv(name: string): string {
 	return value;
 }
 
-const ids = requiredEnv("VISUAL_SCREENS").split(",");
-const outDir = requiredEnv("VISUAL_OUT");
+const ids = process.env.VISUAL_SCREENS?.split(",").filter(Boolean) ?? [];
+const outDir = ids.length > 0 ? requiredEnv("VISUAL_OUT") : "";
 const manifest = loadManifest(resolve(import.meta.dirname, "../../.."));
 
 async function capture(

@@ -39,9 +39,10 @@ export function resolveBase(repoRoot: string): string {
 }
 
 export function changedFiles(repoRoot: string, base: string): string[] {
-	// -z keeps git from quoting names with unusual characters.
+	// -z keeps git from quoting names with unusual characters; --no-renames keeps the old
+	// path of a moved file, which may be a screen's source.
 	const lists = [
-		git(repoRoot, ["diff", "--name-only", "-z", base]),
+		git(repoRoot, ["diff", "--name-only", "--no-renames", "-z", base]),
 		git(repoRoot, ["ls-files", "--others", "--exclude-standard", "-z"]),
 	];
 	const files = lists.flatMap((list) => list.split("\0").filter(Boolean));

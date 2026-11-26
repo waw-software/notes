@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -80,6 +80,17 @@ describe("changedFiles", () => {
 		const repo = featureRepo();
 		write(repo, "untracked.txt", "new\n");
 		expect(changes(repo)).toEqual(["untracked.txt"]);
+	});
+
+	it("a file renamed out of a source directory reports its old path", () => {
+		const repo = initRepo("main");
+		mkdirSync(join(repo, "src"));
+		mkdirSync(join(repo, "other"));
+		commit(repo, "src/a.ts", "export const a = 1;\n");
+		git(repo, "switch", "-q", "-c", "feature");
+		git(repo, "mv", "src/a.ts", "other/a.ts");
+		git(repo, "commit", "-q", "-m", "move");
+		expect(changes(repo)).toEqual(["other/a.ts", "src/a.ts"]);
 	});
 
 	it("an ignored file is not reported", () => {
