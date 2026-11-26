@@ -96,7 +96,7 @@ Decided, the stack ([ADR 0001](decisions/0001-client-and-server-stack.md)):
 
 Proposed:
 
-- The editor component is the riskiest choice in the project: it must edit formatted text, read and write Markdown, and work on iOS and web. Pick it in a spike before the first slice, and record the choice in a decision record.
+- The editor component is the riskiest choice in the project: it must edit formatted text, read and write Markdown, and work on iOS and web. Pick it in a spike before the first slice, and record the choice in a decision record ([ADR 0005](decisions/0005-editor-component.md)).
 
 ### 3.1 Deployment and first run
 
@@ -330,7 +330,6 @@ Work in vertical slices. Each slice includes the API, the screen and a test.
 
 ## 9. Open questions
 
-- Which editor component? The slice-0 spike decides it.
 - What happens to a deleted note: gone at once, or a trash for some days?
 - What happens to the notes of a deleted notebook?
 - Where does a new note go when no notebook is open? See 5.3.
