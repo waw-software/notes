@@ -1,0 +1,12 @@
+{
+	"expo": {
+		"name": "WAW Notes",
+		"slug": "waw-notes",
+		"version": "0.0.0",
+		"platforms": ["ios", "web"],
+		"web": {
+			"bundler": "metro",
+			"output": "single"
+		}
+	}
+}
