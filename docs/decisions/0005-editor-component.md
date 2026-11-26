@@ -1,9 +1,9 @@
 ---
-status: proposed
+status: accepted
 date: 2026-11-26
 decision-makers: oleksandrv
 scope: stack
-summary: "In the context of a note editor for iOS, web and desktop, facing a component that stored Markdown and all editing features will depend on, we propose Tiptap 3 in an Expo DOM component and reject Milkdown 7, TenTap, Lexical, react-native-enriched-html and a custom TextInput block editor, to achieve one editor engine for all three clients, accepting that it runs in a WebView on iOS and rewrites some ordinary text on save."
+summary: "In the context of a note editor for iOS, web and desktop, facing a component that stored Markdown and all editing features will depend on, we decided on Milkdown 7 in an Expo DOM component and rejected Tiptap 3, TenTap, Lexical, react-native-enriched-html and a custom TextInput block editor, to achieve Markdown kept as written and one remark pipeline for client and server, accepting our own checklist node view and a smaller ecosystem."
 supersedes: []
 ---
 
@@ -19,8 +19,8 @@ editor component do we use?
 
 ## Considered Options
 
-* Tiptap 3 in an Expo DOM component
 * Milkdown 7 in an Expo DOM component
+* Tiptap 3 in an Expo DOM component
 * TenTap
 * Lexical
 * react-native-enriched-html
@@ -28,21 +28,24 @@ editor component do we use?
 
 ## Decision Outcome
 
-Proposed option: "Tiptap 3 in an Expo DOM component" (`'use dom'`: Expo's WebView on iOS in Expo
-Go, the DOM on the web and in Electron). In a spike on one
-[canonical fixture](../../apps/client/src/editor-spike/fixture.ts), it passed every criterion
-measured on the web, loaded, exported byte for byte and took an edit in Electron, and loaded,
-rendered the note with the id hidden and exported it byte for byte on an iOS simulator. Pasting
-and line breaks in a linked checklist item were checked in unit tests only. Its
-[adapter](../../apps/client/src/editor-spike/tiptap/session.ts) needs less code than
-[Milkdown's](../../apps/client/src/editor-spike/milkdown/session.ts), it includes undo and redo,
-which Milkdown's presets do not, and in a unit test a linked item moved by dragging kept its id,
-which Milkdown dropped.
+Chosen option: "Milkdown 7 in an Expo DOM component" (`'use dom'`: Expo's WebView on iOS in Expo
+Go, the DOM on the web and in Electron). The owner compared it with Tiptap in a spike and found
+the two about the same to use on the iOS simulator. In the spike both round-tripped the
+[canonical fixture](../../apps/client/src/editor-spike/fixture.ts) byte for byte, hid the id,
+raised the `/` and `[[` triggers, worked on the web and in Electron, and ran in Expo Go on iOS.
+What decides it:
+
+* Markdown is the source of truth: bots read it over MCP, and export and import use it. On save,
+  Milkdown keeps `<`, `&` and `_` in ordinary text (it escapes only `*`, `~` and `[`) and keeps
+  `__bold__` and `_italic_` as written.
+* Milkdown is built on remark and mdast, a pipeline the server can use in `packages/core`, which
+  gives the one parser for client and server of [ADR 0001](0001-client-and-server-stack.md).
 
 Rejected:
 
-* Milkdown 7, because checklist Enter still failed in a real browser after two fix rounds, with
-  the custom node view it needs since its GFM preset has no checkbox; it was not run on iOS.
+* Tiptap 3, because on save it rewrites ordinary text (`a < b & c` becomes `a &lt; b &amp; c`,
+  `snake_case` becomes `snake\_case`) from a private method of `@tiptap/markdown` with no option;
+  it also parses with `marked`, not remark.
 
 The other four were dropped before the spike and not built:
 
@@ -56,22 +59,26 @@ The other four were dropped before the spike and not built:
 ### Consequences
 
 * Good, because iOS, web and desktop share one editor engine
-* Good, because the canonical fixture, in the app's own Markdown style, round-trips byte for byte
-* Good, because the hidden id is an attribute of the checklist item node, so it is never shown
+* Good, because Markdown stays closer to what was written, and the canonical fixture round-trips
+  byte for byte
+* Good, because client and server can share one remark pipeline
+* Good, because the checklist id is never shown
 * Good, because iOS runs it in Expo Go, with no native build
-* Bad, because on save it rewrites some ordinary text with HTML entities and escapes (`<` becomes
-  `&lt;`, `_` becomes `\_`), which the fixture does not contain; it needs a custom text serializer
-  before notes are stored (M6/M7), and the spike did not build one
+* Bad, because its GFM preset draws no checkbox, so the
+  [checklist node view](../../apps/client/src/editor-spike/milkdown/plugins.ts) is our code
+* Bad, because its [adapter](../../apps/client/src/editor-spike/milkdown/session.ts) needed
+  about twice the code of Tiptap's
+* Bad, because undo and redo need Milkdown's history plugin
+* Bad, because a linked checklist item moved by dragging loses its id, as pasted content does;
+  moves need their own rule before the WAW Tasks integration
+* Bad, because its ecosystem is smaller than Tiptap's
 * Bad, because the editor runs in a WebView on iOS
-* Bad, because notes written in another Markdown style are restyled on save; the owner requires
-  a byte-identical round trip for the canonical style only
+* Bad, because notes written in another Markdown style are restyled on save (`*` bullets, padded
+  tables)
 
 ### Confirmation
 
-The [Tiptap session tests](../../apps/client/src/editor-spike/tiptap/session.dom.test.ts) carry
-REQ-001 AC-01 to AC-04. The
+The [Milkdown session tests](../../apps/client/src/editor-spike/milkdown/session.dom.test.ts)
+carry REQ-001 AC-01 to AC-04. The
 [spike screen](../../apps/client/src/editor-spike/EditorSpikeScreen.tsx), shown when the client
 runs with `EXPO_PUBLIC_EDITOR_SPIKE=1`, runs the editor by hand.
-
-Not checked yet: typing on iOS (editing, Enter, `/` and `[[`); the owner checks it before
-accepting this record.

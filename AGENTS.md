@@ -6,7 +6,7 @@ comes from the project template: change it in the template, except the project b
 <!-- project:start -->
 The project is **WAW Notes** (`waw-software/notes`). Self-hosted notes app, no telemetry, full-secured.
 It is a server deployed with Docker, plus iOS, web and Electron clients; bots connect through MCP.
-Stack: [ADR 0001](docs/decisions/0001-client-and-server-stack.md); editor component: open, slice-0 spike.
+Stack: [ADR 0001](docs/decisions/0001-client-and-server-stack.md); editor component: [ADR 0005](docs/decisions/0005-editor-component.md).
 Stage: growing.
 Read first: `docs/SPEC.md`, `docs/DESIGN.md`, `docs/requirements.md`, `docs/working-rules.md`, `docs/decisions/README.md`.
 Commands: Node 24.21.0 and pnpm 12.21.0; `scripts/env.sh setup` installs from the lockfile, `scripts/check.sh` is the full check, and `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` or `pnpm build` run one part.
