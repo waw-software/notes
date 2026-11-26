@@ -40,4 +40,14 @@ export async function setDesktopSize(
 		},
 		{ w: width, h: height },
 	);
+	// macOS keeps a window within the display, so a 900 px high window can come out shorter.
+	// The page's own metrics are not limited: render at the size and the @2x of the mockups.
+	const window = await app.firstWindow();
+	const cdp = await window.context().newCDPSession(window);
+	await cdp.send("Emulation.setDeviceMetricsOverride", {
+		width,
+		height,
+		deviceScaleFactor: 2,
+		mobile: false,
+	});
 }
