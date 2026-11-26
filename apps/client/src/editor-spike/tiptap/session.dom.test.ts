@@ -44,9 +44,9 @@ function paste(view: EditorView, text: string): void {
 	view.pasteText(text, new Event("paste") as ClipboardEvent);
 }
 
-function pressEnter(view: EditorView): void {
+function pressEnter(view: EditorView, modifiers: KeyboardEventInit = {}): void {
 	view.someProp("handleKeyDown", (handler) =>
-		handler(view, new KeyboardEvent("keydown", { key: "Enter" })),
+		handler(view, new KeyboardEvent("keydown", { key: "Enter", ...modifiers })),
 	);
 }
 
@@ -62,6 +62,12 @@ function findParagraph(view: EditorView, text: string) {
 		throw new Error(`No paragraph "${text}"`);
 	}
 	return found;
+}
+
+/** The range of the task item that holds the "Buy tickets" paragraph. */
+function linkedItem(view: EditorView) {
+	const from = findParagraph(view, "Buy tickets").start - 1;
+	return { from, to: from + (view.state.doc.nodeAt(from)?.nodeSize ?? 0) };
 }
 
 function placeCaret(view: EditorView, position: number): void {
@@ -231,4 +237,58 @@ test("REQ-001 AC-04 tiptap: a linked item emptied of its text keeps the id hidde
 	expect(reopened.element.textContent).not.toContain("a1b2");
 	expect(reopened.exports).toEqual([emptied]);
 	expect(emptied).toContain("^a1b2");
+});
+
+test("REQ-001 AC-03 tiptap: pasting a copy of the linked item leaves the id only on the original", () => {
+	const { exports, view } = open(CANONICAL_FIXTURE);
+	const { from, to } = linkedItem(view);
+	// The HTML a copy of the item puts on the clipboard.
+	const copied = view.serializeForClipboard(view.state.doc.slice(from, to)).dom
+		.innerHTML;
+	expect(copied).toContain('data-task-id="a1b2"');
+
+	placeCaret(view, findParagraph(view, "Buy tickets").start + 1);
+	view.pasteHTML(copied, new Event("paste") as ClipboardEvent);
+
+	const last = exports.at(-1) ?? "";
+	expect(last).toContain(
+		"\n\n- [ ] Buy tickets\n- [ ] Buy tickets ^a1b2\n- [x] Check dates\n\n",
+	);
+	expect(last.split("^a1b2")).toHaveLength(2);
+});
+
+test("REQ-001 AC-03 tiptap: moving the linked item by dragging keeps its id", () => {
+	const { view } = open(CANONICAL_FIXTURE);
+	const { from, to } = linkedItem(view);
+	const dragged = view.state.doc.slice(from, to);
+	// What ProseMirror's drop does for a move that started in this editor.
+	view.dragging = { slice: dragged, move: true };
+	let dropped = dragged;
+
+	view.someProp("transformPasted", (transform) => {
+		dropped = transform(dropped, view, false);
+	});
+
+	expect(dropped.content.firstChild?.attrs.taskId).toBe("a1b2");
+});
+
+test("REQ-001 AC-03 AC-04 tiptap: a line break in the linked item keeps the id hidden and attached", () => {
+	const { exports, view } = open(CANONICAL_FIXTURE);
+
+	placeCaret(view, findParagraph(view, "Buy tickets").end);
+	// Shift+Enter runs the `setHardBreak` command.
+	pressEnter(view, { shiftKey: true });
+	type(view, "at the station");
+	const first = exports.at(-1) ?? "";
+
+	const reopened = open(first);
+
+	expect(reopened.element.textContent).not.toContain("a1b2");
+	expect(
+		reopened.element.querySelector('li[data-task-id="a1b2"] p')?.innerHTML,
+	).toContain("Buy tickets<br>at the station");
+	expect(reopened.exports).toEqual([first]);
+	expect(first).toContain(
+		"\n\n- [ ] Buy tickets  \n  at the station ^a1b2\n- [x] Check dates\n\n",
+	);
 });

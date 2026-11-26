@@ -8,6 +8,7 @@ import {
 	TableRow,
 } from "@tiptap/extension-table";
 import { Markdown } from "@tiptap/markdown";
+import { Fragment, type Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { StarterKit } from "@tiptap/starter-kit";
 
 /**
@@ -51,6 +52,19 @@ function extractTaskId(item: JSONContent): JSONContent {
 	};
 }
 
+/** Writes ` ^<id>` at the end of the item's own paragraph, where it is read from. */
+function appendTaskId(item: JSONContent, taskId: string): JSONContent {
+	const [paragraph, ...nested] = item.content ?? [];
+	const suffix = { type: "text", text: ` ^${taskId}` };
+	return {
+		...item,
+		content: [
+			{ ...paragraph, content: [...(paragraph?.content ?? []), suffix] },
+			...nested,
+		],
+	};
+}
+
 const NoteTaskItem = TaskItem.extend({
 	addAttributes() {
 		return {
@@ -70,15 +84,30 @@ const NoteTaskItem = TaskItem.extend({
 	},
 
 	renderMarkdown(node, h, context) {
-		const rendered = this.parent?.(node, h, context) ?? "";
 		const taskId = node.attrs?.taskId;
-		if (!taskId) {
-			return rendered;
-		}
-		const [line, ...rest] = rendered.split("\n");
-		return [`${line} ^${taskId}`, ...rest].join("\n");
+		const item = taskId ? appendTaskId(node, taskId) : node;
+		return this.parent?.(item, h, context) ?? "";
 	},
 });
+
+/** A copy of the pasted content without task ids: an id stays on the item that has it. */
+export function withoutTaskIds(fragment: Fragment): Fragment {
+	const nodes: ProseMirrorNode[] = [];
+	fragment.forEach((node) => {
+		if (node.isText) {
+			nodes.push(node);
+			return;
+		}
+		const attrs =
+			node.type.name === NoteTaskItem.name
+				? { ...node.attrs, taskId: null }
+				: node.attrs;
+		nodes.push(
+			node.type.create(attrs, withoutTaskIds(node.content), node.marks),
+		);
+	});
+	return Fragment.fromArray(nodes);
+}
 
 const SEPARATORS: Readonly<Record<string, string>> = {
 	left: ":---",
