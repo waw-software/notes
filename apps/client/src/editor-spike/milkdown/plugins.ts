@@ -1,15 +1,12 @@
 import { remarkStringifyOptionsCtx } from "@milkdown/kit/core";
 import type { Ctx, MilkdownPlugin, SliceType } from "@milkdown/kit/ctx";
+import { listItemSchema } from "@milkdown/kit/preset/commonmark";
 import { extendListItemSchemaForTask } from "@milkdown/kit/preset/gfm";
-import {
-	DOMSerializer,
-	Fragment,
-	type Node,
-	Slice,
-} from "@milkdown/kit/prose/model";
-import { Plugin } from "@milkdown/kit/prose/state";
+import { Fragment, type Node, Slice } from "@milkdown/kit/prose/model";
+import { splitListItem } from "@milkdown/kit/prose/schema-list";
+import { type Command, Plugin } from "@milkdown/kit/prose/state";
 import type { EditorView, NodeView } from "@milkdown/kit/prose/view";
-import { $nodeSchema, $prose, $remark } from "@milkdown/kit/utils";
+import { $nodeSchema, $prose, $remark, $useKeymap } from "@milkdown/kit/utils";
 import type { EditorAdapterProps } from "../contract";
 import { findTrigger } from "../trigger";
 
@@ -273,6 +270,42 @@ const uniqueTaskIds = $prose(
 		}),
 );
 
+/** Splits a checklist item; the item that Enter creates is unchecked. */
+function splitTaskItem(ctx: Ctx): Command {
+	const type = listItemSchema.type(ctx);
+	return (state, dispatch, view) => {
+		const { $from } = state.selection;
+		// The caret is in a paragraph whose parent is the item.
+		const item = $from.depth > 1 ? $from.node(-1) : undefined;
+		if (item?.type !== type || item.attrs.checked === null) {
+			return false;
+		}
+		return splitListItem(type)(
+			state,
+			dispatch &&
+				((tr) => {
+					const second = tr.selection.$from.before(-1);
+					const first = tr.doc.resolve(second).nodeBefore;
+					// At the start of an item the empty first half is the new one.
+					const created = first?.firstChild?.content.size
+						? second
+						: second - (first?.nodeSize ?? 0);
+					dispatch(tr.setNodeAttribute(created, "checked", false));
+				}),
+			view,
+		);
+	};
+}
+
+const taskListKeymap = $useKeymap("spikeTaskListKeymap", {
+	SplitTaskItem: {
+		shortcuts: "Enter",
+		// Ahead of the preset's split, which copies `checked`.
+		priority: 100,
+		command: splitTaskItem,
+	},
+});
+
 function withoutTaskIds(content: Fragment): Fragment {
 	const nodes: Node[] = [];
 	content.forEach((node) => {
@@ -305,41 +338,77 @@ const pasteWithoutTaskIds = $prose(
 		}),
 );
 
-/** List items; a checklist item gets a checkbox that toggles `checked`. */
+/** The element attributes of a list item; `toDOM` renders them. */
+function listItemAttributes(node: Node) {
+	const spec = node.type.spec.toDOM?.(node) as [
+		string,
+		Record<string, unknown>,
+		0,
+	];
+	return spec[1];
+}
+
+/**
+ * List items; a checklist item gets a checkbox that toggles `checked`.
+ * Attribute changes patch the DOM: replacing the `li` would move a DOM caret
+ * inside it to the list, between two items.
+ */
 function listItemView(
 	initial: Node,
 	view: EditorView,
 	getPos: () => number | undefined,
 ): NodeView {
-	const toDOM = initial.type.spec.toDOM;
-	if (!toDOM) {
-		throw new Error("list_item has no toDOM");
-	}
-	const rendered = DOMSerializer.renderSpec(document, toDOM(initial));
-	const dom = rendered.dom as HTMLElement;
-	let contentDOM = rendered.contentDOM as HTMLElement;
-	if (initial.attrs.checked !== null) {
-		const checkbox = document.createElement("input");
-		checkbox.type = "checkbox";
-		checkbox.checked = initial.attrs.checked === true;
-		checkbox.contentEditable = "false";
-		checkbox.addEventListener("change", () => {
+	const isTask = initial.attrs.checked !== null;
+	const dom = document.createElement("li");
+	let contentDOM: HTMLElement = dom;
+	let checkbox: HTMLInputElement | undefined;
+	if (isTask) {
+		const input = document.createElement("input");
+		input.type = "checkbox";
+		input.contentEditable = "false";
+		// Focus and caret stay in the editor.
+		input.addEventListener("mousedown", (event) => event.preventDefault());
+		input.addEventListener("change", () => {
 			const pos = getPos();
 			if (pos !== undefined) {
 				view.dispatch(
-					view.state.tr.setNodeAttribute(pos, "checked", checkbox.checked),
+					view.state.tr.setNodeAttribute(pos, "checked", input.checked),
 				);
 			}
 		});
+		checkbox = input;
 		contentDOM = document.createElement("div");
-		dom.append(checkbox, contentDOM);
+		dom.append(input, contentDOM);
 	}
+	const sync = (node: Node) => {
+		// The only attribute `toDOM` leaves out instead of setting.
+		dom.removeAttribute("data-task-id");
+		for (const [name, value] of Object.entries(listItemAttributes(node))) {
+			if (value === null || value === undefined) {
+				dom.removeAttribute(name);
+			} else {
+				dom.setAttribute(name, String(value));
+			}
+		}
+		if (checkbox) {
+			checkbox.checked = node.attrs.checked === true;
+		}
+	};
+	sync(initial);
 	return {
 		dom,
 		contentDOM,
-		// New attributes rebuild the view; content changes stay in place.
-		update: (node) =>
-			node.hasMarkup(initial.type, initial.attrs, initial.marks),
+		update: (node) => {
+			// Becoming or ceasing to be a checklist item needs another structure.
+			if (
+				node.type !== initial.type ||
+				(node.attrs.checked !== null) !== isTask
+			) {
+				return false;
+			}
+			sync(node);
+			return true;
+		},
 		ignoreMutation: (mutation) =>
 			mutation.type !== "selection" && !contentDOM.contains(mutation.target),
 		stopEvent: (event) => event.target instanceof HTMLInputElement,
@@ -386,6 +455,7 @@ export function spikePlugins(
 		noteLink,
 		uniqueTaskIds,
 		pasteWithoutTaskIds,
+		taskListKeymap,
 		checklistView,
 		triggerPlugin(onTrigger),
 	].flat();

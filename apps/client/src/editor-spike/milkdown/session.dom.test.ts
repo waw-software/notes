@@ -194,6 +194,17 @@ test("REQ-001 AC-03 milkdown: Enter at the start of the linked item keeps the id
 	expect(last).toContain("- [ ] Buy tickets ^a1b2\n");
 });
 
+test("REQ-001 AC-03 milkdown: Enter at the start of a checked linked item adds an unchecked item before it", async () => {
+	const { view, exports } = await load("- [x] Buy ^a1b2\n");
+
+	setCaret(view, findText(view, "Buy").start);
+	pressEnter(view);
+	setCaret(view, 3);
+	type(view, "Pay");
+
+	expect(exports.at(-1)).toBe("- [ ] Pay\n- [x] Buy ^a1b2\n");
+});
+
 test("REQ-001 AC-03 milkdown: pasting a copy of the linked item leaves the id only on the original", async () => {
 	const { view, exports } = await load(CANONICAL_FIXTURE);
 	const textStart = findText(view, "Buy tickets").start;
@@ -238,6 +249,83 @@ test("REQ-001 AC-03 AC-04 milkdown: a line break in the linked item keeps the id
 	const last = exports.at(-1) ?? "";
 	expect(last).toContain("- [ ] Buy tickets\\\n  at the station ^a1b2\n");
 	await expectHiddenAfterReload(last);
+});
+
+test("REQ-001 AC-03 milkdown: Enter through the keymap at the end of a checked linked item", async () => {
+	const { element, view, exports } = await load(CANONICAL_FIXTURE);
+	setCaret(view, findText(view, "Buy tickets").end);
+	type(view, " now");
+	element
+		.querySelector<HTMLInputElement>('li[data-item-type="task"] input')
+		?.click();
+
+	setCaret(view, findText(view, "Buy tickets now").end);
+	const handled = view.someProp("handleKeyDown", (handle) =>
+		handle(view, new KeyboardEvent("keydown", { key: "Enter" })),
+	);
+	// Unhandled, a browser would apply its own Enter to the DOM.
+	expect(handled).toBe(true);
+	expect(view.state.selection.$from.parent.content.size).toBe(0);
+	type(view, "Pay");
+
+	expect(exports.at(-1)).toContain(
+		"\n- [x] Buy tickets now ^a1b2\n- [ ] Pay\n- [x] Check dates\n",
+	);
+});
+
+/** Focuses the editor so that it writes its selection to the DOM. */
+function focusEditor(view: EditorView) {
+	// jsdom does not treat `contenteditable` as focusable, and has no layout.
+	view.dom.tabIndex = 0;
+	view.setProps({ handleScrollToSelection: () => true });
+	view.focus();
+}
+
+test("REQ-001 AC-03 milkdown: toggling an item keeps its DOM and the DOM caret in place", async () => {
+	const { element, view } = await load(CANONICAL_FIXTURE);
+	focusEditor(view);
+	setCaret(view, findText(view, "Buy tickets").end);
+	const item = element.querySelector('li[data-item-type="task"]');
+	const checkbox = item?.querySelector("input");
+	const caretText = document.getSelection()?.anchorNode;
+	expect(caretText?.textContent).toBe("Buy tickets");
+
+	// A cancelled mousedown leaves focus and caret in the editor.
+	const mousedown = new MouseEvent("mousedown", {
+		bubbles: true,
+		cancelable: true,
+	});
+	expect(checkbox?.dispatchEvent(mousedown)).toBe(false);
+	// Unfocused, ProseMirror does not rewrite the DOM caret after the toggle.
+	// (jsdom's `blur` would drop the selection, so only the answer is faked.)
+	jest.spyOn(view, "hasFocus").mockReturnValue(false);
+	checkbox?.click();
+
+	expect(item?.getAttribute("data-checked")).toBe("true");
+	expect(checkbox?.checked).toBe(true);
+	expect(element.querySelector('li[data-item-type="task"]')).toBe(item);
+	expect(document.getSelection()?.anchorNode).toBe(caretText);
+});
+
+test("REQ-001 AC-03 milkdown: Enter with the DOM caret between two items adds an unchecked item", async () => {
+	const { element, view, exports } = await load(
+		"- [x] Buy ^a1b2\n- [x] Check\n",
+	);
+	focusEditor(view);
+	setCaret(view, findText(view, "Buy").end);
+	document.getSelection()?.collapse(element.querySelector("ul"), 1);
+
+	// A real event: ProseMirror reads the DOM caret before it runs the keymap.
+	view.dom.dispatchEvent(
+		new KeyboardEvent("keydown", {
+			key: "Enter",
+			keyCode: 13,
+			bubbles: true,
+			cancelable: true,
+		}),
+	);
+
+	expect(exports.at(-1)).toBe("- [x] Buy ^a1b2\n- [ ] <br />\n- [x] Check\n");
 });
 
 test("REQ-001 AC-03 milkdown: an item emptied of its text keeps its id across a reload", async () => {
