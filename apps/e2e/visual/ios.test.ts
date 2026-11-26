@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+	bundleState,
 	captureIos,
 	deepLink,
 	hasSettled,
@@ -142,6 +143,37 @@ describe("portBusyMessage", () => {
 
 	it("portBusyMessage is null when nothing answers", () => {
 		expect(portBusyMessage(8082, false)).toBeNull();
+	});
+});
+
+describe("bundleState", () => {
+	it("bundleState is pending without a bundle line", () => {
+		expect(bundleState("")).toBe("pending");
+		expect(bundleState("Starting Metro Bundler\nWaiting on port 8082\n")).toBe(
+			"pending",
+		);
+	});
+
+	it("bundleState is done after an iOS Bundled line", () => {
+		expect(
+			bundleState(
+				"\u001b[32miOS Bundled 812ms\u001b[39m apps/client/index.ts (140 modules)",
+			),
+		).toBe("done");
+	});
+
+	it("bundleState is failed on an iOS Bundling failed line", () => {
+		expect(
+			bundleState(
+				"\u001b[31miOS Bundling failed\u001b[39m 95ms apps/client/index.ts (1 module)",
+			),
+		).toBe("failed");
+	});
+
+	it("bundleState: a Web Bundled line alone is pending", () => {
+		expect(
+			bundleState("Web Bundled 301ms apps/client/index.ts (200 modules)"),
+		).toBe("pending");
 	});
 });
 
