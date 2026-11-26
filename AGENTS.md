@@ -9,7 +9,7 @@ It is a server deployed with Docker, plus iOS, web and Electron clients; bots co
 Stack: [ADR 0001](docs/decisions/0001-client-and-server-stack.md); editor component: open, slice-0 spike.
 Stage: growing.
 Read first: `docs/SPEC.md`, `docs/DESIGN.md`, `docs/requirements.md`, `docs/working-rules.md`, `docs/decisions/README.md`.
-Commands: none yet: the scaffold pull request adds them.
+Commands: Node 24.21.0 and pnpm 12.21.0; `scripts/env.sh setup` installs from the lockfile, `scripts/check.sh` is the full check, and `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` or `pnpm build` run one part.
 <!-- project:end -->
 
 ## Commands
