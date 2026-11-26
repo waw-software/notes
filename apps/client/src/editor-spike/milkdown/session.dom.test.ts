@@ -194,6 +194,52 @@ test("REQ-001 AC-03 milkdown: Enter at the start of the linked item keeps the id
 	expect(last).toContain("- [ ] Buy tickets ^a1b2\n");
 });
 
+test("REQ-001 AC-03 milkdown: pasting a copy of the linked item leaves the id only on the original", async () => {
+	const { view, exports } = await load(CANONICAL_FIXTURE);
+	const textStart = findText(view, "Buy tickets").start;
+	// The caret sits in the item's paragraph; the item starts two levels up.
+	const $text = view.state.doc.resolve(textStart);
+	const copied = view.serializeForClipboard(
+		view.state.doc.slice($text.before(-1), $text.after(-1)),
+	).dom.innerHTML;
+	expect(copied).toContain('data-task-id="a1b2"');
+
+	setCaret(view, textStart);
+	view.pasteHTML(copied, new Event("paste") as ClipboardEvent);
+
+	const last = exports.at(-1) ?? "";
+	expect(last.split("^a1b2")).toHaveLength(2);
+	expect(last).toContain(
+		"\n- [ ] Buy tickets\n- [ ] Buy tickets ^a1b2\n- [x] Check dates\n",
+	);
+});
+
+test("REQ-001 AC-03 AC-04 milkdown: a line break in the linked item keeps the id hidden and attached", async () => {
+	const { view, exports } = await load(CANONICAL_FIXTURE);
+	const insertBreak = () => {
+		const hardbreak = view.state.schema.nodes.hardbreak?.create();
+		if (!hardbreak) {
+			throw new Error("no hardbreak node");
+		}
+		view.dispatch(view.state.tr.replaceSelectionWith(hardbreak, false));
+	};
+	const expectHiddenAfterReload = async (markdown: string) => {
+		const reloaded = await load(markdown);
+		expect(reloaded.element.textContent).not.toContain("a1b2");
+		expect(reloaded.exports).toEqual([markdown]);
+	};
+
+	setCaret(view, findText(view, "Buy tickets").end);
+	insertBreak();
+	// A break with nothing after it yet.
+	await expectHiddenAfterReload(exports.at(-1) ?? "");
+	type(view, "at the station");
+
+	const last = exports.at(-1) ?? "";
+	expect(last).toContain("- [ ] Buy tickets\\\n  at the station ^a1b2\n");
+	await expectHiddenAfterReload(last);
+});
+
 test("REQ-001 AC-03 milkdown: an item emptied of its text keeps its id across a reload", async () => {
 	const { element, view, exports } = await load("- [ ] Buy ^a1b2\n");
 	const { start, end } = findText(view, "Buy");

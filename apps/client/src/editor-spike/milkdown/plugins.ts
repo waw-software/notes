@@ -1,7 +1,12 @@
 import { remarkStringifyOptionsCtx } from "@milkdown/kit/core";
 import type { Ctx, MilkdownPlugin, SliceType } from "@milkdown/kit/ctx";
 import { extendListItemSchemaForTask } from "@milkdown/kit/preset/gfm";
-import { DOMSerializer, Fragment, type Node } from "@milkdown/kit/prose/model";
+import {
+	DOMSerializer,
+	Fragment,
+	type Node,
+	Slice,
+} from "@milkdown/kit/prose/model";
 import { Plugin } from "@milkdown/kit/prose/state";
 import type { EditorView, NodeView } from "@milkdown/kit/prose/view";
 import { $nodeSchema, $prose, $remark } from "@milkdown/kit/utils";
@@ -127,7 +132,7 @@ const taskListItemWithId = extendListItemSchemaForTask.extendSchema(
 	},
 );
 
-/** A copy of the item whose first line ends with its id, for serialization. */
+/** A copy of the item whose own paragraph ends with its id, for serialization. */
 function withIdText(item: Node): Node {
 	const paragraph = item.firstChild;
 	if (item.attrs.checked === null || item.attrs.taskId === null || !paragraph) {
@@ -268,6 +273,38 @@ const uniqueTaskIds = $prose(
 		}),
 );
 
+function withoutTaskIds(content: Fragment): Fragment {
+	const nodes: Node[] = [];
+	content.forEach((node) => {
+		const copy = node.isText ? node : node.copy(withoutTaskIds(node.content));
+		nodes.push(
+			typeof copy.attrs.taskId === "string"
+				? copy.type.create(
+						{ ...copy.attrs, taskId: null },
+						copy.content,
+						copy.marks,
+					)
+				: copy,
+		);
+	});
+	return Fragment.fromArray(nodes);
+}
+
+/** Pasted content is a copy: the id stays with the item already in the note. */
+const pasteWithoutTaskIds = $prose(
+	() =>
+		new Plugin({
+			props: {
+				transformPasted: (slice) =>
+					new Slice(
+						withoutTaskIds(slice.content),
+						slice.openStart,
+						slice.openEnd,
+					),
+			},
+		}),
+);
+
 /** List items; a checklist item gets a checkbox that toggles `checked`. */
 function listItemView(
 	initial: Node,
@@ -348,6 +385,7 @@ export function spikePlugins(
 		taskListItemWithId,
 		noteLink,
 		uniqueTaskIds,
+		pasteWithoutTaskIds,
 		checklistView,
 		triggerPlugin(onTrigger),
 	].flat();
