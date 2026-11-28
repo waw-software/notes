@@ -44,7 +44,7 @@ export function TextInput({
 	}, [errorText]);
 
 	return (
-		<View style={styles.field}>
+		<View>
 			<Text style={styles.label}>{label}</Text>
 			<NativeTextInput
 				value={value}
@@ -68,27 +68,26 @@ export function TextInput({
 					disabled && styles.disabled,
 				]}
 			/>
-			{errorText ? (
-				<Text aria-live="polite" style={styles.error}>
-					{errorText}
-				</Text>
-			) : (
-				!!helperText && <Text style={styles.helper}>{helperText}</Text>
-			)}
+			{/* Stays mounted: screen readers ignore a live region inserted with its text. */}
+			<View aria-live="polite">
+				{errorText ? (
+					<Text style={styles.error}>{errorText}</Text>
+				) : (
+					!!helperText && <Text style={styles.helper}>{helperText}</Text>
+				)}
+			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	field: {
-		gap: theme.space.fieldGap,
-	},
 	label: {
 		fontFamily: fontFamilies.bodyMedium,
 		fontSize: theme.type.controlSupport,
 		color: theme.color["ink-2"],
 	},
 	input: {
+		marginTop: theme.space.fieldGap,
 		paddingHorizontal: theme.space.optionInline,
 		borderWidth: theme.size.controlBorder,
 		borderRadius: theme.radius.input,
@@ -116,11 +115,13 @@ const styles = StyleSheet.create({
 		color: theme.color.muted,
 	},
 	helper: {
+		marginTop: theme.space.fieldGap,
 		fontFamily: fontFamilies.bodyRegular,
 		fontSize: theme.type.meta,
 		color: theme.color.muted,
 	},
 	error: {
+		marginTop: theme.space.fieldGap,
 		fontFamily: fontFamilies.bodyRegular,
 		fontSize: theme.type.meta,
 		color: theme.color["accent-text"],

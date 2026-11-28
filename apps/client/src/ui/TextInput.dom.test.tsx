@@ -39,6 +39,19 @@ describe("TextInput on web", () => {
 		);
 	});
 
+	it("the live region is present before an error and carries the error after it appears", async () => {
+		await renderToken();
+
+		const region = container.querySelector('[aria-live="polite"]');
+
+		expect(region?.textContent).toBe("");
+
+		await renderToken("Enter the server address.");
+
+		expect(region?.isConnected).toBe(true);
+		expect(region?.textContent).toBe("Enter the server address.");
+	});
+
 	it("the input is labelled by its label", async () => {
 		await renderToken();
 
