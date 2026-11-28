@@ -12,6 +12,19 @@
 			"sources": ["apps/client/App.tsx"],
 			"mobile": { "mockup": null },
 			"desktop": { "mockup": null }
+		},
+		{
+			"id": "gallery-forms",
+			"title": "Gallery: buttons, filter pills, text inputs",
+			"path": "/?screen=gallery-forms",
+			"sources": [
+				"apps/client/src/gallery/GalleryForms.tsx",
+				"apps/client/src/ui/Button.tsx",
+				"apps/client/src/ui/FilterPill.tsx",
+				"apps/client/src/ui/TextInput.tsx"
+			],
+			"mobile": { "mockup": "Connect.png" },
+			"desktop": { "mockup": "Connect.png" }
 		}
 	]
 }
