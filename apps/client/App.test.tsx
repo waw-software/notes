@@ -138,6 +138,41 @@ describe("App", () => {
 		expect(screen.queryByRole("header", { name: "WAW Notes" })).toBeNull();
 	});
 
+	it("a failing initial URL shows the shell", async () => {
+		jest.spyOn(Linking, "getInitialURL").mockRejectedValue(new Error("x"));
+
+		await render(<App />);
+
+		expect(
+			await screen.findByRole("header", { name: "WAW Notes" }),
+		).toBeOnTheScreen();
+	});
+
+	it("a url event before the initial URL settles wins", async () => {
+		let resolveInitialUrl: (url: string) => void = () => {};
+		jest.spyOn(Linking, "getInitialURL").mockReturnValue(
+			new Promise((resolve) => {
+				resolveInitialUrl = resolve;
+			}),
+		);
+		const listen = jest.spyOn(Linking, "addEventListener");
+		listen.mockClear();
+		await render(<App />);
+		const listener = listen.mock.calls.find(([type]) => type === "url")?.[1];
+
+		await act(async () => {
+			listener?.({ url: "waw-notes://app/?screen=gallery-forms" });
+		});
+		await act(async () => {
+			resolveInitialUrl(shellUrl);
+		});
+
+		expect(screen.queryAllByLabelText("Access token").length).toBeGreaterThan(
+			0,
+		);
+		expect(screen.queryByRole("header", { name: "WAW Notes" })).toBeNull();
+	});
+
 	it("opens the editor spike only with EXPO_PUBLIC_EDITOR_SPIKE=1", async () => {
 		const previous = process.env.EXPO_PUBLIC_EDITOR_SPIKE;
 		process.env.EXPO_PUBLIC_EDITOR_SPIKE = "1";

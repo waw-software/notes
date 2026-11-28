@@ -28,14 +28,28 @@ function NotesApp(): React.JSX.Element | null {
 	}, [fontError]);
 
 	useEffect(() => {
+		let active = true;
+		let eventSeen = false;
 		const open = (url: string | null | undefined) => {
 			setSection(galleryRoute(url ?? null));
 		};
-		Linking.getInitialURL().then(open);
-		const subscription = Linking.addEventListener("url", ({ url }) =>
-			open(url),
-		);
-		return () => subscription.remove();
+		Linking.getInitialURL()
+			.then((url) => {
+				// A url event is newer than the initial URL.
+				if (active && !eventSeen) {
+					open(url);
+				}
+			})
+			// No initial URL: stay on the shell.
+			.catch(() => {});
+		const subscription = Linking.addEventListener("url", ({ url }) => {
+			eventSeen = true;
+			open(url);
+		});
+		return () => {
+			active = false;
+			subscription.remove();
+		};
 	}, []);
 
 	// A font error wins over the gallery: the shell in system fonts, whatever the URL.
