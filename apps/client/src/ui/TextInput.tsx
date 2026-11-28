@@ -1,5 +1,5 @@
 import { theme } from "@waw/design-tokens";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
 	AccessibilityInfo,
 	TextInput as NativeTextInput,
@@ -35,6 +35,9 @@ export function TextInput({
 	// The error present at mount stays readable on screen and is not announced.
 	const lastError = useRef(errorText);
 	const verbatim = kind !== "text";
+	const descriptionId = useId();
+	// The error replaces the helper; web gets it by id, native as the hint.
+	const description = errorText || helperText;
 
 	useEffect(() => {
 		if (errorText && errorText !== lastError.current) {
@@ -53,7 +56,8 @@ export function TextInput({
 				onBlur={() => setFocused(false)}
 				accessibilityLabel={label}
 				aria-label={label}
-				accessibilityHint={errorText || helperText}
+				accessibilityHint={description}
+				{...(description ? { "aria-describedby": descriptionId } : {})}
 				accessibilityState={{ disabled }}
 				aria-disabled={disabled}
 				editable={!disabled}
@@ -71,9 +75,15 @@ export function TextInput({
 			{/* Stays mounted: screen readers ignore a live region inserted with its text. */}
 			<View aria-live="polite">
 				{errorText ? (
-					<Text style={styles.error}>{errorText}</Text>
+					<Text id={descriptionId} style={styles.error}>
+						{errorText}
+					</Text>
 				) : (
-					!!helperText && <Text style={styles.helper}>{helperText}</Text>
+					!!helperText && (
+						<Text id={descriptionId} style={styles.helper}>
+							{helperText}
+						</Text>
+					)
 				)}
 			</View>
 		</View>

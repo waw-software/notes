@@ -52,6 +52,73 @@ describe("TextInput on web", () => {
 		expect(region?.textContent).toBe("Enter the server address.");
 	});
 
+	function description(input: Element | null | undefined) {
+		const id = input?.getAttribute("aria-describedby");
+		return id ? document.getElementById(id)?.textContent : undefined;
+	}
+
+	it("an error is the input's description", async () => {
+		await renderToken("Enter the server address.");
+
+		expect(description(container.querySelector("input"))).toBe(
+			"Enter the server address.",
+		);
+	});
+
+	it("helper text is the description when there is no error", async () => {
+		await act(async () =>
+			root.render(
+				<TextInput
+					label="Access token"
+					value=""
+					onValueChange={() => {}}
+					helperText="Paste the token from your server."
+				/>,
+			),
+		);
+
+		expect(description(container.querySelector("input"))).toBe(
+			"Paste the token from your server.",
+		);
+	});
+
+	it("no helper and no error gives no description", async () => {
+		await renderToken();
+
+		expect(
+			container.querySelector("input")?.hasAttribute("aria-describedby"),
+		).toBe(false);
+	});
+
+	it("two inputs side by side get different description ids", async () => {
+		await act(async () =>
+			root.render(
+				<>
+					<TextInput
+						label="Server URL"
+						value=""
+						onValueChange={() => {}}
+						helperText="Use the address of your server."
+					/>
+					<TextInput
+						label="Access token"
+						value=""
+						onValueChange={() => {}}
+						helperText="Paste the token from your server."
+					/>
+				</>,
+			),
+		);
+
+		const [first, second] = Array.from(container.querySelectorAll("input"));
+
+		expect(description(first)).toBe("Use the address of your server.");
+		expect(description(second)).toBe("Paste the token from your server.");
+		expect(first?.getAttribute("aria-describedby")).not.toBe(
+			second?.getAttribute("aria-describedby"),
+		);
+	});
+
 	it("the input is labelled by its label", async () => {
 		await renderToken();
 
