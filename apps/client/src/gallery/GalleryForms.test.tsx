@@ -1,16 +1,28 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
-import { StyleSheet } from "react-native";
+import { TextInput } from "../ui/TextInput";
 import GalleryForms from "./GalleryForms";
+
+// Records the props each field passes on; the real component still renders.
+// Both layouts look the same in PR 1, so only the prop tells them apart.
+jest.mock("../ui/TextInput", () => {
+	const actual = jest.requireActual("../ui/TextInput");
+	return { TextInput: jest.fn(actual.TextInput) };
+});
 
 function selected(name: string) {
 	return screen.getByRole("button", { name }).props.accessibilityState.selected;
 }
 
-function textInputs() {
-	return screen.container.queryAll((node) => node.type === "TextInput");
+// One entry per field on the first render: nothing re-renders without input.
+function fieldLayouts() {
+	return jest.mocked(TextInput).mock.calls.map(([props]) => props.layout);
 }
 
 describe("GalleryForms", () => {
+	beforeEach(() => {
+		jest.mocked(TextInput).mockClear();
+	});
+
 	it("mobile shows the Connect fields and both buttons", async () => {
 		await render(<GalleryForms layout="mobile" />);
 
@@ -58,13 +70,21 @@ describe("GalleryForms", () => {
 		expect(screen.queryByRole("button", { name: "Scan QR code" })).toBeNull();
 	});
 
-	it("every field gets the gallery layout", async () => {
+	it("every mobile field gets layout mobile", async () => {
+		await render(<GalleryForms layout="mobile" />);
+
+		expect(fieldLayouts()).toEqual(["mobile", "mobile", "mobile"]);
+	});
+
+	it("every desktop field gets layout desktop", async () => {
 		await render(<GalleryForms layout="desktop" />);
 
-		expect(
-			textInputs().map(
-				(field) => StyleSheet.flatten(field.props.style).minHeight,
-			),
-		).toEqual([52, 52, 52, 52, 52]);
+		expect(fieldLayouts()).toEqual([
+			"desktop",
+			"desktop",
+			"desktop",
+			"desktop",
+			"desktop",
+		]);
 	});
 });
